@@ -3,6 +3,7 @@ package com.giraone.pms.web.rest;
 import com.giraone.pms.PmssqlApp;
 import com.giraone.pms.domain.Company;
 import com.giraone.pms.repository.CompanyRepository;
+import com.giraone.pms.security.AuthoritiesConstants;
 import com.giraone.pms.service.CompanyService;
 import com.giraone.pms.service.dto.CompanyDTO;
 import com.giraone.pms.service.mapper.CompanyMapper;
@@ -19,6 +20,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Integration tests for the {@Link CompanyResource} REST controller.
  */
 @SpringBootTest(classes = PmssqlApp.class)
+@WithMockUser(username = "admin", authorities={AuthoritiesConstants.ADMIN})
 public class CompanyResourceIT {
 
     private static final String DEFAULT_EXTERNAL_ID = "AAAAAAAAAA";
@@ -91,7 +94,7 @@ public class CompanyResourceIT {
     private Company company;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         MockitoAnnotations.initMocks(this);
         final CompanyResource companyResource = new CompanyResource(companyService);
         this.restCompanyMockMvc = MockMvcBuilders.standaloneSetup(companyResource)
@@ -108,7 +111,7 @@ public class CompanyResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static Company createEntity(EntityManager em) {
+    static Company createEntity(EntityManager em) {
         Company company = new Company()
             .externalId(DEFAULT_EXTERNAL_ID)
             .name(DEFAULT_NAME)
@@ -123,7 +126,7 @@ public class CompanyResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static Company createUpdatedEntity(EntityManager em) {
+    static Company createUpdatedEntity(EntityManager em) {
         Company company = new Company()
             .externalId(UPDATED_EXTERNAL_ID)
             .name(UPDATED_NAME)
@@ -134,13 +137,13 @@ public class CompanyResourceIT {
     }
 
     @BeforeEach
-    public void initTest() {
+    void initTest() {
         company = createEntity(em);
     }
 
     @Test
     @Transactional
-    public void createCompany() throws Exception {
+    void createCompany() throws Exception {
         int databaseSizeBeforeCreate = companyRepository.findAll().size();
 
         // Create the Company
@@ -163,7 +166,7 @@ public class CompanyResourceIT {
 
     @Test
     @Transactional
-    public void createCompanyWithExistingId() throws Exception {
+    void createCompanyWithExistingId() throws Exception {
         int databaseSizeBeforeCreate = companyRepository.findAll().size();
 
         // Create the Company with an existing ID
@@ -184,7 +187,7 @@ public class CompanyResourceIT {
 
     @Test
     @Transactional
-    public void checkExternalIdIsRequired() throws Exception {
+    void checkExternalIdIsRequired() throws Exception {
         int databaseSizeBeforeTest = companyRepository.findAll().size();
         // set the field null
         company.setExternalId(null);
@@ -203,7 +206,7 @@ public class CompanyResourceIT {
 
     @Test
     @Transactional
-    public void getAllCompanies() throws Exception {
+    void getAllCompanies() throws Exception {
         // Initialize the database
         companyRepository.saveAndFlush(company);
 
@@ -254,7 +257,7 @@ public class CompanyResourceIT {
 
     @Test
     @Transactional
-    public void getCompany() throws Exception {
+    void getCompany() throws Exception {
         // Initialize the database
         companyRepository.saveAndFlush(company);
 
@@ -272,7 +275,7 @@ public class CompanyResourceIT {
 
     @Test
     @Transactional
-    public void getNonExistingCompany() throws Exception {
+    void getNonExistingCompany() throws Exception {
         // Get the company
         restCompanyMockMvc.perform(get("/api/companies/{id}", Long.MAX_VALUE))
             .andExpect(status().isNotFound());
@@ -280,7 +283,7 @@ public class CompanyResourceIT {
 
     @Test
     @Transactional
-    public void updateCompany() throws Exception {
+    void updateCompany() throws Exception {
         // Initialize the database
         companyRepository.saveAndFlush(company);
 
@@ -316,7 +319,7 @@ public class CompanyResourceIT {
 
     @Test
     @Transactional
-    public void updateNonExistingCompany() throws Exception {
+    void updateNonExistingCompany() throws Exception {
         int databaseSizeBeforeUpdate = companyRepository.findAll().size();
 
         // Create the Company
@@ -335,7 +338,7 @@ public class CompanyResourceIT {
 
     @Test
     @Transactional
-    public void deleteCompany() throws Exception {
+    void deleteCompany() throws Exception {
         // Initialize the database
         companyRepository.saveAndFlush(company);
 
@@ -353,7 +356,7 @@ public class CompanyResourceIT {
 
     @Test
     @Transactional
-    public void equalsVerifier() throws Exception {
+    void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(Company.class);
         Company company1 = new Company();
         company1.setId(1L);
@@ -368,7 +371,7 @@ public class CompanyResourceIT {
 
     @Test
     @Transactional
-    public void dtoEqualsVerifier() throws Exception {
+    void dtoEqualsVerifier() throws Exception {
         TestUtil.equalsVerifier(CompanyDTO.class);
         CompanyDTO companyDTO1 = new CompanyDTO();
         companyDTO1.setId(1L);
@@ -384,7 +387,7 @@ public class CompanyResourceIT {
 
     @Test
     @Transactional
-    public void testEntityFromId() {
+    void testEntityFromId() {
         assertThat(companyMapper.fromId(42L).getId()).isEqualTo(42);
         assertThat(companyMapper.fromId(null)).isNull();
     }

@@ -1,14 +1,17 @@
 package com.giraone.pms.web.rest;
 
 import com.giraone.pms.PmssqlApp;
-import com.giraone.pms.domain.Employee;
 import com.giraone.pms.domain.Company;
+import com.giraone.pms.domain.Employee;
+import com.giraone.pms.domain.enumeration.GenderType;
 import com.giraone.pms.repository.EmployeeRepository;
+import com.giraone.pms.security.AuthoritiesConstants;
+import com.giraone.pms.service.AuthorizationService;
+import com.giraone.pms.service.CompanyService;
 import com.giraone.pms.service.EmployeeService;
 import com.giraone.pms.service.dto.EmployeeDTO;
 import com.giraone.pms.service.mapper.EmployeeMapper;
 import com.giraone.pms.web.rest.errors.ExceptionTranslator;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
@@ -17,6 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,12 +36,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import com.giraone.pms.domain.enumeration.GenderType;
 /**
- * Integration tests for the {@Link EmployeeResource} REST controller.
+ * Integration tests for the {@link EmployeeResource} REST controller.
  */
 @SpringBootTest(classes = PmssqlApp.class)
+@WithMockUser(username = "admin", authorities={AuthoritiesConstants.ADMIN})
 public class EmployeeResourceIT {
 
     private static final String DEFAULT_SURNAME = "AAAAAAAAAA";
@@ -69,6 +72,10 @@ public class EmployeeResourceIT {
 
     @Autowired
     private EmployeeService employeeService;
+    @Autowired
+    private CompanyService companyService;
+    @Autowired
+    private AuthorizationService authorizationService;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -90,9 +97,9 @@ public class EmployeeResourceIT {
     private Employee employee;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         MockitoAnnotations.initMocks(this);
-        final EmployeeResource employeeResource = new EmployeeResource(employeeService);
+        final EmployeeResource employeeResource = new EmployeeResource(employeeService, companyService, authorizationService);
         this.restEmployeeMockMvc = MockMvcBuilders.standaloneSetup(employeeResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -107,7 +114,7 @@ public class EmployeeResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static Employee createEntity(EntityManager em) {
+    static Employee createEntity(EntityManager em) {
         Employee employee = new Employee()
             .surname(DEFAULT_SURNAME)
             .givenName(DEFAULT_GIVEN_NAME)
@@ -157,13 +164,13 @@ public class EmployeeResourceIT {
     }
 
     @BeforeEach
-    public void initTest() {
+    void initTest() {
         employee = createEntity(em);
     }
 
     @Test
     @Transactional
-    public void createEmployee() throws Exception {
+    void createEmployee() throws Exception {
         int databaseSizeBeforeCreate = employeeRepository.findAll().size();
 
         // Create the Employee
@@ -188,7 +195,7 @@ public class EmployeeResourceIT {
 
     @Test
     @Transactional
-    public void createEmployeeWithExistingId() throws Exception {
+    void createEmployeeWithExistingId() throws Exception {
         int databaseSizeBeforeCreate = employeeRepository.findAll().size();
 
         // Create the Employee with an existing ID
@@ -209,7 +216,7 @@ public class EmployeeResourceIT {
 
     @Test
     @Transactional
-    public void checkSurnameIsRequired() throws Exception {
+    void checkSurnameIsRequired() throws Exception {
         int databaseSizeBeforeTest = employeeRepository.findAll().size();
         // set the field null
         employee.setSurname(null);
@@ -228,7 +235,7 @@ public class EmployeeResourceIT {
 
     @Test
     @Transactional
-    public void getAllEmployees() throws Exception {
+    void getAllEmployees() throws Exception {
         // Initialize the database
         employeeRepository.saveAndFlush(employee);
 
@@ -237,18 +244,18 @@ public class EmployeeResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(employee.getId().intValue())))
-            .andExpect(jsonPath("$.[*].surname").value(hasItem(DEFAULT_SURNAME.toString())))
-            .andExpect(jsonPath("$.[*].givenName").value(hasItem(DEFAULT_GIVEN_NAME.toString())))
+            .andExpect(jsonPath("$.[*].surname").value(hasItem(DEFAULT_SURNAME)))
+            .andExpect(jsonPath("$.[*].givenName").value(hasItem(DEFAULT_GIVEN_NAME)))
             .andExpect(jsonPath("$.[*].dateOfBirth").value(hasItem(DEFAULT_DATE_OF_BIRTH.toString())))
-            .andExpect(jsonPath("$.[*].gender").value(hasItem(DEFAULT_GENDER.toString())))
-            .andExpect(jsonPath("$.[*].postalCode").value(hasItem(DEFAULT_POSTAL_CODE.toString())))
-            .andExpect(jsonPath("$.[*].city").value(hasItem(DEFAULT_CITY.toString())))
-            .andExpect(jsonPath("$.[*].streetAddress").value(hasItem(DEFAULT_STREET_ADDRESS.toString())));
+            .andExpect(jsonPath("$.[*].gender").value(hasItem(DEFAULT_GENDER.name())))
+            .andExpect(jsonPath("$.[*].postalCode").value(hasItem(DEFAULT_POSTAL_CODE)))
+            .andExpect(jsonPath("$.[*].city").value(hasItem(DEFAULT_CITY)))
+            .andExpect(jsonPath("$.[*].streetAddress").value(hasItem(DEFAULT_STREET_ADDRESS)));
     }
     
     @Test
     @Transactional
-    public void getEmployee() throws Exception {
+    void getEmployee() throws Exception {
         // Initialize the database
         employeeRepository.saveAndFlush(employee);
 
@@ -257,18 +264,18 @@ public class EmployeeResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(employee.getId().intValue()))
-            .andExpect(jsonPath("$.surname").value(DEFAULT_SURNAME.toString()))
-            .andExpect(jsonPath("$.givenName").value(DEFAULT_GIVEN_NAME.toString()))
+            .andExpect(jsonPath("$.surname").value(DEFAULT_SURNAME))
+            .andExpect(jsonPath("$.givenName").value(DEFAULT_GIVEN_NAME))
             .andExpect(jsonPath("$.dateOfBirth").value(DEFAULT_DATE_OF_BIRTH.toString()))
-            .andExpect(jsonPath("$.gender").value(DEFAULT_GENDER.toString()))
-            .andExpect(jsonPath("$.postalCode").value(DEFAULT_POSTAL_CODE.toString()))
-            .andExpect(jsonPath("$.city").value(DEFAULT_CITY.toString()))
-            .andExpect(jsonPath("$.streetAddress").value(DEFAULT_STREET_ADDRESS.toString()));
+            .andExpect(jsonPath("$.gender").value(DEFAULT_GENDER.name()))
+            .andExpect(jsonPath("$.postalCode").value(DEFAULT_POSTAL_CODE))
+            .andExpect(jsonPath("$.city").value(DEFAULT_CITY))
+            .andExpect(jsonPath("$.streetAddress").value(DEFAULT_STREET_ADDRESS));
     }
 
     @Test
     @Transactional
-    public void getNonExistingEmployee() throws Exception {
+    void getNonExistingEmployee() throws Exception {
         // Get the employee
         restEmployeeMockMvc.perform(get("/api/employees/{id}", Long.MAX_VALUE))
             .andExpect(status().isNotFound());
@@ -276,7 +283,7 @@ public class EmployeeResourceIT {
 
     @Test
     @Transactional
-    public void updateEmployee() throws Exception {
+    void updateEmployee() throws Exception {
         // Initialize the database
         employeeRepository.saveAndFlush(employee);
 
@@ -316,7 +323,7 @@ public class EmployeeResourceIT {
 
     @Test
     @Transactional
-    public void updateNonExistingEmployee() throws Exception {
+    void updateNonExistingEmployee() throws Exception {
         int databaseSizeBeforeUpdate = employeeRepository.findAll().size();
 
         // Create the Employee
@@ -335,7 +342,7 @@ public class EmployeeResourceIT {
 
     @Test
     @Transactional
-    public void deleteEmployee() throws Exception {
+    void deleteEmployee() throws Exception {
         // Initialize the database
         employeeRepository.saveAndFlush(employee);
 
@@ -353,7 +360,7 @@ public class EmployeeResourceIT {
 
     @Test
     @Transactional
-    public void equalsVerifier() throws Exception {
+    void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(Employee.class);
         Employee employee1 = new Employee();
         employee1.setId(1L);
@@ -368,7 +375,7 @@ public class EmployeeResourceIT {
 
     @Test
     @Transactional
-    public void dtoEqualsVerifier() throws Exception {
+    void dtoEqualsVerifier() throws Exception {
         TestUtil.equalsVerifier(EmployeeDTO.class);
         EmployeeDTO employeeDTO1 = new EmployeeDTO();
         employeeDTO1.setId(1L);
@@ -384,7 +391,7 @@ public class EmployeeResourceIT {
 
     @Test
     @Transactional
-    public void testEntityFromId() {
+    void testEntityFromId() {
         assertThat(employeeMapper.fromId(42L).getId()).isEqualTo(42);
         assertThat(employeeMapper.fromId(null)).isNull();
     }

@@ -94,6 +94,13 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @BatchSize(size = 20)
     private Set<Authority> authorities = new HashSet<>();
 
+    // Bi-directional many-to-many already mapped from the Company-side
+    // This mapping is only needed to formulate queries in JPQL, therefore we have also no getter/setter
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "users")
+    @SuppressWarnings("unused")
+    private Set<Company> companies = new HashSet<>(); // user is member of these companies
+
     public Long getId() {
         return id;
     }

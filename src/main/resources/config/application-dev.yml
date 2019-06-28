@@ -15,8 +15,10 @@
 
 logging:
   level:
-    ROOT: DEBUG
-    io.github.jhipster: DEBUG
+    ROOT: WARN
+    io.github.jhipster: WARN
+    # Log the JDBC parameters passed to a query also (jpa.show-sql=true logs only the statement!)
+    # org.hibernate.type: TRACE
     com.giraone.pms: DEBUG
 
 spring:
@@ -58,7 +60,7 @@ spring:
       hibernate.generate_statistics: false
   liquibase:
     # Remove 'faker' if you do not want the sample data to be loaded automatically
-    contexts: dev, faker
+    contexts: dev
   mail:
     host: localhost
     port: 25

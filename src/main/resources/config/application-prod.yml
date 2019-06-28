@@ -18,6 +18,9 @@ logging:
     ROOT: INFO
     com.giraone.pms: INFO
     io.github.jhipster: INFO
+    org.springframework.orm.jpa: INFO
+    org.springframework.transaction: INFO
+    org.postgres.jdbc: INFO
 
 management:
   metrics:
@@ -45,7 +48,8 @@ spring:
     show-sql: false
     properties:
       hibernate.id.new_generator_mappings: true
-      hibernate.connection.provider_disables_autocommit: true
+      # Must be false within cloud foundry environment (hs)
+      hibernate.connection.provider_disables_autocommit: false
       hibernate.cache.use_second_level_cache: true
       hibernate.cache.use_query_cache: false
       hibernate.generate_statistics: false

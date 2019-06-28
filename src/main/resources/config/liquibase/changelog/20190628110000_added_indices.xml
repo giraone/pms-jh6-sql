@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="20190123200000-1" author="hs">
+        <validCheckSum>ANY</validCheckSum>
+        <preConditions onFail="MARK_RAN">
+            <indexExists indexName="emname_name_index" />
+        </preConditions>
+        <dropIndex indexName="emname_name_index" tableName="employee_name" />
+    </changeSet>
+
+    <changeSet id="20190123200000-2" author="hs">
+        <validCheckSum>ANY</validCheckSum>
+        <preConditions onFail="MARK_RAN">
+            <not><indexExists indexName="emname_name_index" /></not>
+        </preConditions>
+        <createIndex tableName="employee_name" indexName="emname_name_index">
+            <column name="company_id" />
+            <column name="name_key" />
+            <column name="name_value" />
+        </createIndex>
+    </changeSet>
+
+
+    <changeSet id="20190123200000-3" author="hs">
+        <validCheckSum>ANY</validCheckSum>
+        <preConditions onFail="MARK_RAN">
+            <indexExists indexName="emname_owner_index" />
+        </preConditions>
+        <dropIndex indexName="emname_owner_index" tableName="employee_name" />
+    </changeSet>
+
+    <changeSet id="20190123200000-4" author="hs">
+        <validCheckSum>ANY</validCheckSum>
+        <preConditions onFail="MARK_RAN">
+            <not><indexExists indexName="emname_owner_index" /></not>
+        </preConditions>
+        <createIndex tableName="employee_name" indexName="emname_owner_index">
+            <column name="owner_id" />
+        </createIndex>
+    </changeSet>
+
+
+    <changeSet id="20190123200000-5" author="hs">
+        <validCheckSum>ANY</validCheckSum>
+        <preConditions onFail="MARK_RAN">
+            <not><indexExists indexName="employee_dob_index" /></not>
+        </preConditions>
+        <createIndex tableName="employee" indexName="employee_dob_index">
+            <column name="date_of_birth" />
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>
