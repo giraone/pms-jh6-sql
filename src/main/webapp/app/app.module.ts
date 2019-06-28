@@ -17,6 +17,7 @@ import { PmssqlAppRoutingModule } from './app-routing.module';
 import { PmssqlHomeModule } from './home/home.module';
 import { PmssqlAccountModule } from './account/account.module';
 import { PmssqlEntityModule } from './entities/entity.module';
+import { PmssqlDomainModule } from './domain/entity.module'; // ADDED (hs)
 import * as moment from 'moment';
 // jhipster-needle-angular-add-module-import JHipster will add new module here
 import { JhiMainComponent, NavbarComponent, FooterComponent, PageRibbonComponent, ActiveMenuDirective, ErrorComponent } from './layouts';
@@ -38,6 +39,7 @@ import { JhiMainComponent, NavbarComponent, FooterComponent, PageRibbonComponent
     PmssqlAccountModule,
     // jhipster-needle-angular-add-module JHipster will add new module here
     PmssqlEntityModule,
+    PmssqlDomainModule, // ADDED (hs)
     PmssqlAppRoutingModule
   ],
   declarations: [JhiMainComponent, NavbarComponent, ErrorComponent, PageRibbonComponent, ActiveMenuDirective, FooterComponent],

@@ -7,8 +7,8 @@
       "jhipster-needle-menu-add-element": "JHipster will add additional menu entries here (do not translate!)",
       "entities": {
         "main": "Entitäten",
-        "company": "Company",
-        "employee": "Employee",
+        "company": "Unternehmen",
+        "employee": "Mitarbeiter",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {
@@ -36,15 +36,15 @@
       "language": "Sprache"
     },
     "form": {
-      "username.label": "Benutzername",
+      "username": "Benutzername",
       "username.placeholder": "Ihr Benutzername",
-      "currentpassword.label": "Aktuelles Passwort",
+      "currentpassword": "Aktuelles Passwort",
       "currentpassword.placeholder": "Aktuelles Passwort",
-      "newpassword.label": "Neues Passwort",
+      "newpassword": "Neues Passwort",
       "newpassword.placeholder": "Neues Passwort",
-      "confirmpassword.label": "Neues Passwort bestätigen",
+      "confirmpassword": "Neues Passwort bestätigen",
       "confirmpassword.placeholder": "Bestätigen Sie Ihr neues Passwort",
-      "email.label": "Email Adresse",
+      "email": "Email Adresse",
       "email.placeholder": "Ihre Email Adresse"
     },
     "messages": {
@@ -52,7 +52,7 @@
         "authenticated": {
           "prefix": "Wenn Sie sich ",
           "link": "anmelden",
-          "suffix": " möchten, versuchen Sie es mit <br/>- Administrator (Name=\"admin\" und Passwort=\"admin\")<br/>- Benutzer (Name=\"user\" und Passwort=\"user\")."
+          "suffix": " möchten, versuchen Sie es mit <br/>- Administrator (Name=\"admin\")."
         },
         "register": {
           "noaccount": "Sie haben noch keinen Zugang?",
@@ -133,5 +133,5 @@
     "idexists": "Ein neuer {{entityName}} kann noch keine ID haben",
     "idnull": "Ungültige ID"
   },
-  "footer": "Dies ist Ihre Fußzeile"
+  "footer": "Made with JHipster"
 }

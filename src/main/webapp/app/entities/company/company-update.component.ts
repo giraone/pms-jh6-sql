@@ -119,4 +119,7 @@ export class CompanyUpdateComponent implements OnInit {
     }
     return option;
   }
+  displayName(user: IUser): string {
+    return '"' + user.lastName + ' ' + user.firstName + '" (' + user.login + ')';
+  }
 }

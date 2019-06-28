@@ -1,27 +1,38 @@
 <div>
-    <h2 id="page-heading">
-        <span jhiTranslate="pmssqlApp.employee.home.title">Employees</span>
-        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-employee" [routerLink]="['/employee/new']">
-            <fa-icon [icon]="'plus'"></fa-icon>
-            <span  jhiTranslate="pmssqlApp.employee.home.createLabel">
-            Create new Employee
-            </span>
-        </button>
-    </h2>
+    <form name="searchForm" (submit)="search()">
+        <div class="divNewLine" jhiTranslate="pmssqlApp.query.title.main">Employees of company:</div>
+        <div class="divLeft" >
+            <select class="form-control" style="height: calc(1.5rem + 2px); padding-top: 1px; padding-bottom: 1px;"
+                id="userCompany" name="userCompany" [(ngModel)]="currentCompany" (ngModelChange)="search()">
+                <option *ngFor="let company of currentCompanies" [ngValue]="company">{{company.name + '(' + company.externalId + ')'}}</option>
+            </select>
+        </div>
+        <div class="divLeft" jhiTranslate="pmssqlApp.query.count" [translateValues]="{ count: totalItems }">Count = [{{totalItems}}]</div>
+        <div class="divNewLine">
+            <input class="form-control" type="text" id="input" name="input" [(ngModel)]="input" (ngModelChange)="useTypeAhead && filterChanged()"
+                placeholder="{{'pmssqlApp.query.filter.placeholder' | translate}}" size="60" />
+        </div>
+        <div class="divLeft">
+            <button type="submit" class="btn btn-info btn-sm">
+                <fa-icon [icon]="'search'"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="pmssqlApp.query.search">Search</span>         
+            </button>
+        </div>
+        <div class="divLeftWide">
+            <input class="form-check-input" type="checkbox" id="useTypeAhead" name="useTypeAhead" [(ngModel)]="useTypeAhead">
+            <span jhiTranslate="pmssqlApp.query.useTypeAhead">Incremental search</span>
+        </div>
+    </form>
     <jhi-alert></jhi-alert>
     <br/>
-    <div class="alert alert-warning" *ngIf="employees?.length === 0">
-        <span jhiTranslate="pmssqlApp.employee.home.notFound">No employees found</span>
-    </div>
-    <div class="table-responsive" *ngIf="employees?.length > 0">
+    <div class="table-responsive" *ngIf="employees">
         <table class="table table-striped">
             <thead>
-            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
+            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="reset.bind(this)">
             <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="surname"><span jhiTranslate="pmssqlApp.employee.surname">Surname</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="givenName"><span jhiTranslate="pmssqlApp.employee.givenName">Given Name</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="dateOfBirth"><span jhiTranslate="pmssqlApp.employee.dateOfBirth">Date Of Birth</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="gender"><span jhiTranslate="pmssqlApp.employee.gender">Gender</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="dateOfBirth"><span jhiTranslate="pmssqlApp.employee.dateOfBirthShort">DoB</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="postalCode"><span jhiTranslate="pmssqlApp.employee.postalCode">Postal Code</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="city"><span jhiTranslate="pmssqlApp.employee.city">City</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="streetAddress"><span jhiTranslate="pmssqlApp.employee.streetAddress">Street Address</span> <fa-icon [icon]="'sort'"></fa-icon></th>
@@ -29,13 +40,12 @@
             <th></th>
             </tr>
             </thead>
-            <tbody>
+            <tbody infinite-scroll (scrolled)="loadPage(page + 1)" [infiniteScrollDisabled]="page >= links['last']" [infiniteScrollDistance]="0">
             <tr *ngFor="let employee of employees ;trackBy: trackId">
                 <td><a [routerLink]="['/employee', employee.id, 'view' ]">{{employee.id}}</a></td>
                 <td>{{employee.surname}}</td>
                 <td>{{employee.givenName}}</td>
                 <td>{{employee.dateOfBirth | date:'shortDate':null:languageKey}}</td>
-                <td jhiTranslate="{{'pmssqlApp.GenderTypeShort.' + employee.gender}}">{{employee.gender}}</td>
                 <td>{{employee.postalCode}}</td>
                 <td>{{employee.city}}</td>
                 <td>{{employee.streetAddress}}</td>
@@ -43,9 +53,10 @@
                     <div *ngIf="employee.companyId">
                         <a [routerLink]="['../company', employee.companyId , 'view' ]" >{{employee.companyId}}</a>
                     </div>
+                    
                 </td>
                 <td class="text-right">
-                    <div class="btn-group">
+                    <div class="btn-group flex-btn-group-container">
                         <button type="submit"
                                 [routerLink]="['/employee', employee.id, 'view' ]"
                                 class="btn btn-info btn-sm">
@@ -71,13 +82,5 @@
             </tr>
             </tbody>
         </table>
-    </div>
-    <div [hidden]="employees?.length === 0">
-        <div class="row justify-content-center">
-            <jhi-item-count [page]="page" [total]="totalItems" [maxSize]="5" [itemsPerPage]="itemsPerPage"></jhi-item-count>
-        </div>
-        <div class="row justify-content-center">
-            <ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage(page)"></ngb-pagination>
-        </div>
     </div>
 </div>

@@ -21,4 +21,8 @@ export class CompanyDetailComponent implements OnInit {
   previousState() {
     window.history.back();
   }
+
+  displayName(user: IUser): string {
+    return '"' + user.lastName + ' ' + user.firstName + '" (' + user.login + ')';
+  }
 }

@@ -4,8 +4,7 @@
       "home": {
         "title": "Companies",
         "createLabel": "Create a new Company",
-        "createOrEditLabel": "Create or edit a Company",
-        "notFound": "No Company found"
+        "createOrEditLabel": "Create or edit a Company"
       },
       "created": "A new Company is created with identifier {{ param }}",
       "updated": "A Company is updated with identifier {{ param }}",

@@ -1,0 +1,18 @@
+{
+  "pmssqlApp": {
+    "query": {
+      "menu": "Suche nach Mitarbeitern",
+      "pageTitleMain": "Suche nach Mitarbeitern",
+      "title": {
+        "main": "Mitarbeiter des Unternehmens:"
+      },
+      "all_companies": "Mitarbeiter von allen Unternehmen",
+      "count": "Anzahl = {{count}}",
+      "filter": {
+        "placeholder": "Filterung über Nachname oder Geburtsdatum"
+      },
+      "search": "Suchen",
+      "useTypeAhead": "Vorschlagsuche"
+    }
+  }
+}

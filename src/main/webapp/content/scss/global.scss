@@ -171,3 +171,34 @@ ui bootstrap tweaks
 }
 
 /* jhipster-needle-scss-add-main JHipster will add new css style */
+
+/* ADDED-START (hs) */
+
+.divLeft {
+  float: left;
+  position: relative;
+  padding-left: 10px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-right: 2px;
+}
+.divLeftWide {
+  float: left;
+  position: relative;
+  padding-left: 50px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-right: 2px;
+}
+.divNewLine {
+  clear: both;
+  float: left;
+  display: block;
+  position: relative;
+  padding-left: 0px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-right: 2px;
+}
+
+/* ADDED-END (hs) */
