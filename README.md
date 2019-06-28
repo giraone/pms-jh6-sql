@@ -63,7 +63,7 @@ jhipster upgrade [--verbose]
 
 ## Security
 
-In constrast to the standard JHipster generated projects, only users with the role ADMIN can access the
+In contrast to the standard JHipster generated projects, only users with the role ADMIN can access the
 generated CRUD REST services under the `/api` URL. All REST interfaces for "normal" users are placed
 under the URL `domain-api` and are authorized to reflect \*multi-tenancy` (a user of a company can see
 only employees of his/her company).
@@ -271,7 +271,7 @@ limit 100
 
 ### Redundant storage of "normalized" and "phonetic names"
 
-- All queries on names are peformed on the `EntityName` table, so the master table `Employee`is accessed only, when
+- All queries on names are performed on the `EntityName` table, so the master table `Employee`is accessed only, when
   employees are filtered by the exact date of birth.
 - The used SQL table `EntityName` has no object id. It is managed by JPA and its
   primary key is a composite key of all 3 columns (`owner_id`, `name_key`, `name_value`).
