@@ -1,0 +1,9 @@
+version: '2'
+services:
+  pgadmin4:
+    image: dpage/pgadmin4:latest
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+      - 80:80
