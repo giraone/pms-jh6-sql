@@ -1,0 +1,79 @@
+// --- --- --- LAYOUT --- --- ---
+
+#arrowSize: 2
+#lineWidth: 5
+
+// --- --- --- ENUMERATIONS --- --- ---
+
+enum GenderType {
+ UNKNOWN, MALE, FEMALE
+}
+
+// --- --- --- ENITIES --- --- ---
+
+/**
+ * The Company entity.
+ */
+entity Company {
+ externalId String required unique,
+ name String,
+ postalCode String,
+ city String,
+ streetAddress String
+}
+
+/**
+ * The Employee entity.
+ */
+entity Employee {
+ surname String required,
+ givenName String,
+ dateOfBirth LocalDate,
+ gender GenderType,
+ postalCode String,
+ city String,
+ streetAddress String
+}
+
+// Only for the diagram
+// entity EmployeeName {
+//  nameKey String required,
+//  nameValue String required
+// }
+
+// --- --- --- RELATIONSHIPS --- --- ---
+
+relationship ManyToOne {
+ Employee{company required} to Company
+}
+
+relationship ManyToMany {
+  Company{user} to User{company}
+}
+
+// Only for the diagram
+// relationship ManyToOne {
+//  EmployeeName{owner required} to Employee
+// }
+
+// Only for the diagram
+// entity User {
+//  login String required unique,
+//  email String  required unique
+// }
+
+// --- --- --- MISC --- --- ---
+
+// Set pagination options
+//paginate Employee with infinite-scroll
+paginate Employee with pagination
+paginate Company with pagination
+
+// Use Data Transfer Objects (DTO)
+dto * with mapstruct
+
+// Set service options (use Impl)
+service all with serviceImpl
+
+// Set an angular suffix
+// angularSuffix * with mySuffix

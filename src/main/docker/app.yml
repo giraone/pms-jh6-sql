@@ -14,3 +14,7 @@ services:
     extends:
       file: postgresql.yml
       service: pmssql-postgresql
+  pgadmin4:
+    extends:
+      file: pgadmin4.yml
+      service: pgadmin4
