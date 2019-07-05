@@ -49,6 +49,8 @@
         <profile.no-liquibase />
         <profile.swagger />
         <profile.tls />
+        <profile.ebs /> <!-- (hs) ADDED -->
+        <jar.executable>true</jar.executable>
 
         <!-- Dependency versions -->
         <jhipster-dependencies.version>3.0.3</jhipster-dependencies.version>
@@ -425,7 +427,7 @@
                 </executions>
                 <configuration>
                     <mainClass>${start-class}</mainClass>
-                    <executable>true</executable>
+                    <executable>${jar.executable}</executable>
                     <fork>true</fork>
                     <!--
                     Enable the line below to have remote debugging of your application on port 5005
@@ -806,6 +808,14 @@
                 <profile.tls>,tls</profile.tls>
             </properties>
         </profile>
+        <!-- (hs) ADDED -->
+        <profile>
+            <id>ebs</id>
+            <properties>
+                <profile.ebs>,ebs</profile.ebs>
+                <jar.executable>false</jar.executable>
+            </properties>
+        </profile>
         <profile>
             <id>webpack</id>
             <activation>
@@ -890,9 +900,29 @@
                     <artifactId>h2</artifactId>
                 </dependency>
             </dependencies>
+            <!-- (hs) ADDED wg. executable -->
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <configuration>
+                            <mainClass>${start-class}</mainClass>
+                            <executable>${jar.executable}</executable>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>build-info</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
             <properties>
-                <!-- default Spring profiles -->
-                <spring.profiles.active>dev${profile.tls}${profile.no-liquibase}</spring.profiles.active>
+                <!-- default Spring profiles --><!-- (hs) CHANGED -->
+                <spring.profiles.active>dev${profile.tls}${profile.no-liquibase}${profile.ebs}</spring.profiles.active>
             </properties>
         </profile>
         <profile>
@@ -920,7 +950,7 @@
                         <artifactId>spring-boot-maven-plugin</artifactId>
                         <configuration>
                             <mainClass>${start-class}</mainClass>
-                            <executable>true</executable>
+                            <executable>false</executable>
                         </configuration>
                         <executions>
                             <execution>
@@ -984,8 +1014,8 @@
                 </plugins>
             </build>
             <properties>
-                <!-- default Spring profiles -->
-                <spring.profiles.active>prod${profile.swagger}${profile.no-liquibase}</spring.profiles.active>
+                <!-- default Spring profiles --><!-- (hs) CHANGED -->
+                <spring.profiles.active>prod${profile.swagger}${profile.no-liquibase}${profile.ebs}</spring.profiles.active>
             </properties>
         </profile>
         <profile>

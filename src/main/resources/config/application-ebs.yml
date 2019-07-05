@@ -1,0 +1,17 @@
+# ===================================================================
+# Activate this profile to use AWS Beanstalk deployment
+# ===================================================================
+server:
+  port: 5000
+#spring:
+#  datasource:
+#    url: 'jdbc:postgresql://xxx.eu-central-1.rds.amazonaws.com:5432/postgres'
+#    username: xxx
+#    password: 'xxx'
+#  jpa:
+#    database-platform: io.github.jhipster.domain.util.FixedPostgreSQL95Dialect
+#    database: POSTGRESQL
+#jhipster:
+#  mail:
+#    from: pmssql@xxx.com
+#    base-url: http://xxx.eu-central-1.elasticbeanstalk.com
