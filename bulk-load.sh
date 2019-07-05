@@ -1,7 +1,8 @@
 #!/bin/bash
 
 BASE_URL="http://localhost:8080"
-#BASE_URL="http://pmssql-env.p2wirtvhmn.eu-west-1.elasticbeanstalk.com"
+#BASE_URL="http://pms-jh6-sql-h2-dev.eu-central-1.elasticbeanstalk.com"
+#BASE_URL="http://pms-jh6-sql-pq-prod.eu-central-1.elasticbeanstalk.com"
 #BASE_URL="https://pmssql.cfapps.io"
 
 ROOT_DATA_DIR="../data-10M"
