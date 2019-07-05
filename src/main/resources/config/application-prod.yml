@@ -15,12 +15,14 @@
 
 logging:
   level:
-    ROOT: INFO
+    ROOT: WARN
     com.giraone.pms: INFO
     io.github.jhipster: INFO
-    org.springframework.orm.jpa: INFO
-    org.springframework.transaction: INFO
-    org.postgres.jdbc: INFO
+    # org.hibernate.type: TRACE
+    # org.springframework.orm.jpa: INFO
+    # org.springframework.transaction: INFO
+    # org.postgres.jdbc: INFO
+    # liquibase: INFO
 
 management:
   metrics:
