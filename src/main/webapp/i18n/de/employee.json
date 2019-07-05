@@ -4,7 +4,8 @@
       "home": {
         "title": "Mitarbeiter",
         "createLabel": "Mitarbeiter erstellen",
-        "createOrEditLabel": "Mitarbeiter erstellen oder bearbeiten"
+        "createOrEditLabel": "Mitarbeiter erstellen oder bearbeiten",
+        "notFound": "Keine Mitarbeiter gefunden"
       },
       "created": "Mitarbeiter erstellt mit ID {{ param }}",
       "updated": "Mitarbeiter aktualisiert mit ID {{ param }}",

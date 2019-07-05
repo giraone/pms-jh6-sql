@@ -4,7 +4,8 @@
       "home": {
         "title": "Unternehmen",
         "createLabel": "Unternehmen erstellen",
-        "createOrEditLabel": "Unternehmen erstellen oder bearbeiten"
+        "createOrEditLabel": "Unternehmen erstellen oder bearbeiten",
+        "notFound": "Keine Unternehmen gefunden"
       },
       "created": "Unternehmen erstellt mit ID {{ param }}",
       "updated": "Unternehmen aktualisiert mit ID {{ param }}",

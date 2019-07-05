@@ -5,8 +5,8 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { JhiAlertService } from 'ng-jhipster';
-import { ICompany, Company } from 'app/shared/model/company.model';
 import { CompanyService } from './company.service';
+import { ICompany, Company } from 'app/shared/model/company.model';
 import { IUser, UserService } from 'app/core';
 
 @Component({
@@ -14,6 +14,7 @@ import { IUser, UserService } from 'app/core';
   templateUrl: './company-update.component.html'
 })
 export class CompanyUpdateComponent implements OnInit {
+  company: ICompany;
   isSaving: boolean;
 
   users: IUser[];
@@ -119,6 +120,7 @@ export class CompanyUpdateComponent implements OnInit {
     }
     return option;
   }
+
   displayName(user: IUser): string {
     return '"' + user.lastName + ' ' + user.firstName + '" (' + user.login + ')';
   }

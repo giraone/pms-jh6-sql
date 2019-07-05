@@ -3,14 +3,15 @@
     "employee": {
       "home": {
         "title": "Employees",
-        "createLabel": "Create a new Employee",
-        "createOrEditLabel": "Create or edit a Employee"
+        "createLabel": "Create a new employee",
+        "createOrEditLabel": "Create or edit an employee",
+        "notFound": "No employees found"
       },
-      "created": "A new Employee is created with identifier {{ param }}",
-      "updated": "A Employee is updated with identifier {{ param }}",
-      "deleted": "A Employee is deleted with identifier {{ param }}",
+      "created": "A new employee is created with identifier {{ param }}",
+      "updated": "A employee is updated with identifier {{ param }}",
+      "deleted": "An employee is deleted with identifier {{ param }}",
       "delete": {
-        "question": "Are you sure you want to delete Employee {{ id }}?"
+        "question": "Are you sure you want to delete employee with id {{ id }}?"
       },
       "detail": {
         "title": "Employee"
