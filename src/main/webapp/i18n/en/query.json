@@ -12,7 +12,11 @@
         "placeholder": "Filter by surname or date of birth"
       },
       "search": "Search",
-      "useTypeAhead": "Incremental search"
+      "useTypeAhead": "Incremental search",
+      "error": {
+        "notFound": "No employees found - invalid company or no rights?",
+        "other": "Request failed: {{ statusText }}"
+      }
     }
   }
 }

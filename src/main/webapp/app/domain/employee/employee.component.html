@@ -1,4 +1,7 @@
 <div>
+
+    <jhi-alert></jhi-alert>
+
     <form name="searchForm" (submit)="search()">
         <div class="divNewLine" jhiTranslate="pmssqlApp.query.title.main">Employees of company:</div>
         <div class="divLeft" >
@@ -15,7 +18,7 @@
         <div class="divLeft">
             <button type="submit" class="btn btn-info btn-sm">
                 <fa-icon [icon]="'search'"></fa-icon>
-                <span class="d-none d-md-inline" jhiTranslate="pmssqlApp.query.search">Search</span>         
+                <span class="d-none d-md-inline" jhiTranslate="pmssqlApp.query.search">Search</span>
             </button>
         </div>
         <div class="divLeftWide">
@@ -23,8 +26,9 @@
             <span jhiTranslate="pmssqlApp.query.useTypeAhead">Incremental search</span>
         </div>
     </form>
-    <jhi-alert></jhi-alert>
+
     <br/>
+
     <div class="table-responsive" *ngIf="employees">
         <table class="table table-striped">
             <thead>
@@ -53,7 +57,7 @@
                     <div *ngIf="employee.companyId">
                         <a [routerLink]="['../company', employee.companyId , 'view' ]" >{{employee.companyId}}</a>
                     </div>
-                    
+
                 </td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">

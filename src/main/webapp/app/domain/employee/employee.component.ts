@@ -96,7 +96,13 @@ export class EmployeeComponent implements OnInit, OnDestroy {
         }
         this.paginateEmployees(res.body, res.headers);
       },
-      (res: HttpErrorResponse) => this.onError(res.message)
+      (res: HttpErrorResponse) => {
+        if (res.status === 404) {
+          this.onError('pmssqlApp.query.error.notFound');
+        } else {
+          this.onError('pmssqlApp.query.error.other', { statusText: res.statusText });
+        }
+      }
     );
   }
 
@@ -131,7 +137,13 @@ export class EmployeeComponent implements OnInit, OnDestroy {
         this.currentCompany = this.currentCompanies.length === 0 ? null : this.currentCompanies[0];
         this.load();
       },
-      (res: HttpErrorResponse) => this.onError(res.message)
+      (res: HttpErrorResponse) => {
+        if (res.message) {
+          this.onError(res.message);
+        } else {
+          this.onError('pmssqlApp.query.error.other', { statusText: res.statusText });
+        }
+      }
     );
 
     this.registerChangeInEmployees();
@@ -172,8 +184,8 @@ export class EmployeeComponent implements OnInit, OnDestroy {
     }
   }
 
-  protected onError(errorMessage: string) {
-    this.jhiAlertService.error(errorMessage, null, null);
+  protected onError(errorMessage: string, params?: any) {
+    this.jhiAlertService.error(errorMessage, params, null);
   }
 
   protected getExternalCompanyId() {

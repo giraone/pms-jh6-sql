@@ -12,7 +12,11 @@
         "placeholder": "Filterung über Nachname oder Geburtsdatum"
       },
       "search": "Suchen",
-      "useTypeAhead": "Vorschlagsuche"
+      "useTypeAhead": "Vorschlagsuche",
+      "error": {
+        "notFound": "Keine Mitarbeiter gefunden - Kein Unternehmen oder kein Zugriff?",
+        "other": "Fehler in Server-Request: {{ statusText }}"
+      }
     }
   }
 }
