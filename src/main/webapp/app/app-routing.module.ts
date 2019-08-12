@@ -12,6 +12,7 @@ const LAYOUT_ROUTES = [navbarRoute, ...errorRoute];
         {
           path: 'admin',
           loadChildren: './admin/admin.module#PmssqlAdminModule'
+          // loadChildren: () => import('./admin/admin.module').then(m => m.PmssqlAdminModule)
         },
         ...LAYOUT_ROUTES
       ],

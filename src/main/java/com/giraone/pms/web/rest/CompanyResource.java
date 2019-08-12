@@ -1,9 +1,8 @@
 package com.giraone.pms.web.rest;
 
 import com.giraone.pms.service.CompanyService;
-import com.giraone.pms.web.rest.errors.BadRequestAlertException;
 import com.giraone.pms.service.dto.CompanyDTO;
-
+import com.giraone.pms.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -13,16 +12,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -72,10 +69,9 @@ public class CompanyResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated companyDTO,
      * or with status {@code 400 (Bad Request)} if the companyDTO is not valid,
      * or with status {@code 500 (Internal Server Error)} if the companyDTO couldn't be updated.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/companies")
-    public ResponseEntity<CompanyDTO> updateCompany(@Valid @RequestBody CompanyDTO companyDTO) throws URISyntaxException {
+    public ResponseEntity<CompanyDTO> updateCompany(@Valid @RequestBody CompanyDTO companyDTO) {
         log.debug("REST request to update Company : {}", companyDTO);
         if (companyDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");

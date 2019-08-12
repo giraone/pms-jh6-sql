@@ -19,7 +19,7 @@ import java.util.List;
  * REST controller for managing employee bulk imports
  */
 @RestController
-@RequestMapping("/bulk-api")
+@RequestMapping("/api")
 public class EmployeeBulkResource {
 
     private final Logger log = LoggerFactory.getLogger(EmployeeBulkResource.class);

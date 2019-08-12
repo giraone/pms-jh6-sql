@@ -6,7 +6,7 @@ Test application for database performance with company/employee model.
 
 See [ORIGINAL-README-jhipster.md](ORIGINAL-README-jhipster.md) for the original JHipster README.
 Most of the generated resources and services are left untouched to be used as an administraion (CRUD) api.
-The added resources are using the base URL `/domain-api` and all classes are named _<Entity>DomainResource_,
+The added resources are using the base URL `/api` and all classes are named _<Entity>DomainResource_,
 _<Entity>DomainService_ and _<Entity>DomainImpl_.
 
 ## Build, test and run
@@ -65,7 +65,7 @@ jhipster upgrade [--verbose]
 
 In contrast to the standard JHipster generated projects, only users with the role ADMIN can access the
 generated CRUD REST services under the `/api` URL. All REST interfaces for "normal" users are placed
-under the URL `domain-api` and are authorized to reflect \*multi-tenancy` (a user of a company can see
+under the URL `api` and are authorized to reflect \*multi-tenancy` (a user of a company can see
 only employees of his/her company).
 
 ## CURL samples (admin API)
@@ -90,7 +90,7 @@ The first PUT call uses data from [the testdata-generator project on GitHub](htt
 
 ```
 
-curl "${BASE_URL}/bulk-api/employee-list" -k -H 'Accept: application/json' -H 'Content-Type: application/json' \
+curl "${BASE_URL}/api/employee-list" -k -H 'Accept: application/json' -H 'Content-Type: application/json' \
  -H "Authorization: Bearer ${token}" -X PUT  --data @../data-10M/d-00000000/f-00000000.json
 
 curl "${BASE_URL}/api/employees?filter=muell&page=0&size=20&sort=id,asc" -k -H 'Accept: application/json' -H "Authorization: Bearer ${token}"
@@ -98,7 +98,7 @@ curl "${BASE_URL}/api/employees?filter=\"mueller\"&page=0&size=20&sort=id,asc" -
 curl "${BASE_URL}/api/employees?filter=muell&companyExternalId=l-00000042&page=0&size=20&sort=id,asc" -k -H 'Accept: application/json' -H "Authorization: Bearer ${token}"
 curl "${BASE_URL}/api/employees?filter=muell&page=0&size=20&sort=id,asc -k -H 'Accept: application/json' -H "Authorization: Bearer ${token}"
 
-curl "${BASE_URL}/bulk-api/re-index?clear=false" -H 'Accept: application/json' -H "Authorization: Bearer ${token}"
+curl "${BASE_URL}/api/re-index?clear=false" -H 'Accept: application/json' -H "Authorization: Bearer ${token}"
 ```
 
 ## Performance of bulk load
