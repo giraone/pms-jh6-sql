@@ -5,7 +5,7 @@ Test application for database performance with company/employee model.
 ## JHipster
 
 See [ORIGINAL-README-jhipster.md](ORIGINAL-README-jhipster.md) for the original JHipster README.
-Most of the generated resources and services are left untouched to be used as an administraion (CRUD) api.
+Most of the generated resources and services are left untouched to be used as an administration (CRUD) api.
 The added resources are using the base URL `/api` and all classes are named _<Entity>DomainResource_,
 _<Entity>DomainService_ and _<Entity>DomainImpl_.
 
