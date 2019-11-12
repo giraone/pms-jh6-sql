@@ -8,22 +8,23 @@
             </span>
         </button>
     </h2>
+    <jhi-alert-error></jhi-alert-error>
     <jhi-alert></jhi-alert>
     <br/>
     <div class="alert alert-warning" *ngIf="companies?.length === 0">
         <span jhiTranslate="pmssqlApp.company.home.notFound">No companies found</span>
     </div>
     <div class="table-responsive" *ngIf="companies?.length > 0">
-        <table class="table table-striped">
+        <table class="table table-striped" aria-describedby="page-heading">
             <thead>
             <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
-            <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="externalId"><span jhiTranslate="pmssqlApp.company.externalId">External Id</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="name"><span jhiTranslate="pmssqlApp.company.name">Name</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="postalCode"><span jhiTranslate="pmssqlApp.company.postalCode">Postal Code</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="city"><span jhiTranslate="pmssqlApp.company.city">City</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="streetAddress"><span jhiTranslate="pmssqlApp.company.streetAddress">Street Address</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th></th>
+            <th scope="col"  jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th scope="col"  jhiSortBy="externalId"><span jhiTranslate="pmssqlApp.company.externalId">External Id</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th scope="col"  jhiSortBy="name"><span jhiTranslate="pmssqlApp.company.name">Name</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th scope="col"  jhiSortBy="postalCode"><span jhiTranslate="pmssqlApp.company.postalCode">Postal Code</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th scope="col"  jhiSortBy="city"><span jhiTranslate="pmssqlApp.company.city">City</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th scope="col"  jhiSortBy="streetAddress"><span jhiTranslate="pmssqlApp.company.streetAddress">Street Address</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th scope="col"></th>
             </tr>
             </thead>
             <tbody>
@@ -64,7 +65,7 @@
     </div>
     <div [hidden]="companies?.length === 0">
         <div class="row justify-content-center">
-            <jhi-item-count [page]="page" [total]="totalItems" [maxSize]="5" [itemsPerPage]="itemsPerPage"></jhi-item-count>
+            <jhi-item-count [page]="page" [total]="totalItems" [itemsPerPage]="itemsPerPage"></jhi-item-count>
         </div>
         <div class="row justify-content-center">
             <ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage(page)"></ngb-pagination>

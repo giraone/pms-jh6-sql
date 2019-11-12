@@ -21,7 +21,7 @@ export class CompanyDeleteDialogComponent {
   }
 
   confirmDelete(id: number) {
-    this.companyService.delete(id).subscribe(response => {
+    this.companyService.delete(id).subscribe(() => {
       this.eventManager.broadcast({
         name: 'companyListModification',
         content: 'Deleted an company'
@@ -46,11 +46,11 @@ export class CompanyDeletePopupComponent implements OnInit, OnDestroy {
         this.ngbModalRef = this.modalService.open(CompanyDeleteDialogComponent as Component, { size: 'lg', backdrop: 'static' });
         this.ngbModalRef.componentInstance.company = company;
         this.ngbModalRef.result.then(
-          result => {
+          () => {
             this.router.navigate(['/company', { outlets: { popup: null } }]);
             this.ngbModalRef = null;
           },
-          reason => {
+          () => {
             this.router.navigate(['/company', { outlets: { popup: null } }]);
             this.ngbModalRef = null;
           }

@@ -48,7 +48,6 @@ public class EmployeeResourceIT {
 
     private static final LocalDate DEFAULT_DATE_OF_BIRTH = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_DATE_OF_BIRTH = LocalDate.now(ZoneId.systemDefault());
-    private static final LocalDate SMALLER_DATE_OF_BIRTH = LocalDate.ofEpochDay(-1L);
 
     private static final GenderType DEFAULT_GENDER = GenderType.UNKNOWN;
     private static final GenderType UPDATED_GENDER = GenderType.MALE;
@@ -238,13 +237,13 @@ public class EmployeeResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(employee.getId().intValue())))
-            .andExpect(jsonPath("$.[*].surname").value(hasItem(DEFAULT_SURNAME.toString())))
-            .andExpect(jsonPath("$.[*].givenName").value(hasItem(DEFAULT_GIVEN_NAME.toString())))
+            .andExpect(jsonPath("$.[*].surname").value(hasItem(DEFAULT_SURNAME)))
+            .andExpect(jsonPath("$.[*].givenName").value(hasItem(DEFAULT_GIVEN_NAME)))
             .andExpect(jsonPath("$.[*].dateOfBirth").value(hasItem(DEFAULT_DATE_OF_BIRTH.toString())))
             .andExpect(jsonPath("$.[*].gender").value(hasItem(DEFAULT_GENDER.toString())))
-            .andExpect(jsonPath("$.[*].postalCode").value(hasItem(DEFAULT_POSTAL_CODE.toString())))
-            .andExpect(jsonPath("$.[*].city").value(hasItem(DEFAULT_CITY.toString())))
-            .andExpect(jsonPath("$.[*].streetAddress").value(hasItem(DEFAULT_STREET_ADDRESS.toString())));
+            .andExpect(jsonPath("$.[*].postalCode").value(hasItem(DEFAULT_POSTAL_CODE)))
+            .andExpect(jsonPath("$.[*].city").value(hasItem(DEFAULT_CITY)))
+            .andExpect(jsonPath("$.[*].streetAddress").value(hasItem(DEFAULT_STREET_ADDRESS)));
     }
     
     @Test
@@ -258,13 +257,13 @@ public class EmployeeResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(employee.getId().intValue()))
-            .andExpect(jsonPath("$.surname").value(DEFAULT_SURNAME.toString()))
-            .andExpect(jsonPath("$.givenName").value(DEFAULT_GIVEN_NAME.toString()))
+            .andExpect(jsonPath("$.surname").value(DEFAULT_SURNAME))
+            .andExpect(jsonPath("$.givenName").value(DEFAULT_GIVEN_NAME))
             .andExpect(jsonPath("$.dateOfBirth").value(DEFAULT_DATE_OF_BIRTH.toString()))
             .andExpect(jsonPath("$.gender").value(DEFAULT_GENDER.toString()))
-            .andExpect(jsonPath("$.postalCode").value(DEFAULT_POSTAL_CODE.toString()))
-            .andExpect(jsonPath("$.city").value(DEFAULT_CITY.toString()))
-            .andExpect(jsonPath("$.streetAddress").value(DEFAULT_STREET_ADDRESS.toString()));
+            .andExpect(jsonPath("$.postalCode").value(DEFAULT_POSTAL_CODE))
+            .andExpect(jsonPath("$.city").value(DEFAULT_CITY))
+            .andExpect(jsonPath("$.streetAddress").value(DEFAULT_STREET_ADDRESS));
     }
 
     @Test
@@ -350,43 +349,5 @@ public class EmployeeResourceIT {
         // Validate the database contains one less item
         List<Employee> employeeList = employeeRepository.findAll();
         assertThat(employeeList).hasSize(databaseSizeBeforeDelete - 1);
-    }
-
-    @Test
-    @Transactional
-    public void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(Employee.class);
-        Employee employee1 = new Employee();
-        employee1.setId(1L);
-        Employee employee2 = new Employee();
-        employee2.setId(employee1.getId());
-        assertThat(employee1).isEqualTo(employee2);
-        employee2.setId(2L);
-        assertThat(employee1).isNotEqualTo(employee2);
-        employee1.setId(null);
-        assertThat(employee1).isNotEqualTo(employee2);
-    }
-
-    @Test
-    @Transactional
-    public void dtoEqualsVerifier() throws Exception {
-        TestUtil.equalsVerifier(EmployeeDTO.class);
-        EmployeeDTO employeeDTO1 = new EmployeeDTO();
-        employeeDTO1.setId(1L);
-        EmployeeDTO employeeDTO2 = new EmployeeDTO();
-        assertThat(employeeDTO1).isNotEqualTo(employeeDTO2);
-        employeeDTO2.setId(employeeDTO1.getId());
-        assertThat(employeeDTO1).isEqualTo(employeeDTO2);
-        employeeDTO2.setId(2L);
-        assertThat(employeeDTO1).isNotEqualTo(employeeDTO2);
-        employeeDTO1.setId(null);
-        assertThat(employeeDTO1).isNotEqualTo(employeeDTO2);
-    }
-
-    @Test
-    @Transactional
-    public void testEntityFromId() {
-        assertThat(employeeMapper.fromId(42L).getId()).isEqualTo(42);
-        assertThat(employeeMapper.fromId(null)).isNull();
     }
 }

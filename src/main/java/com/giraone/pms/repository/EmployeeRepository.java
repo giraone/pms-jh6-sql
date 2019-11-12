@@ -1,5 +1,4 @@
 package com.giraone.pms.repository;
-
 import com.giraone.pms.domain.Employee;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;

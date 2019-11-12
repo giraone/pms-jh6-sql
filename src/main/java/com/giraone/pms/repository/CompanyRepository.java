@@ -1,5 +1,4 @@
 package com.giraone.pms.repository;
-
 import com.giraone.pms.domain.Company;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

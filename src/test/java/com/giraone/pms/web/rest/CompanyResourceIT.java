@@ -212,11 +212,11 @@ public class CompanyResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(company.getId().intValue())))
-            .andExpect(jsonPath("$.[*].externalId").value(hasItem(DEFAULT_EXTERNAL_ID.toString())))
-            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
-            .andExpect(jsonPath("$.[*].postalCode").value(hasItem(DEFAULT_POSTAL_CODE.toString())))
-            .andExpect(jsonPath("$.[*].city").value(hasItem(DEFAULT_CITY.toString())))
-            .andExpect(jsonPath("$.[*].streetAddress").value(hasItem(DEFAULT_STREET_ADDRESS.toString())));
+            .andExpect(jsonPath("$.[*].externalId").value(hasItem(DEFAULT_EXTERNAL_ID)))
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
+            .andExpect(jsonPath("$.[*].postalCode").value(hasItem(DEFAULT_POSTAL_CODE)))
+            .andExpect(jsonPath("$.[*].city").value(hasItem(DEFAULT_CITY)))
+            .andExpect(jsonPath("$.[*].streetAddress").value(hasItem(DEFAULT_STREET_ADDRESS)));
     }
     
     @SuppressWarnings({"unchecked"})
@@ -263,11 +263,11 @@ public class CompanyResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(company.getId().intValue()))
-            .andExpect(jsonPath("$.externalId").value(DEFAULT_EXTERNAL_ID.toString()))
-            .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
-            .andExpect(jsonPath("$.postalCode").value(DEFAULT_POSTAL_CODE.toString()))
-            .andExpect(jsonPath("$.city").value(DEFAULT_CITY.toString()))
-            .andExpect(jsonPath("$.streetAddress").value(DEFAULT_STREET_ADDRESS.toString()));
+            .andExpect(jsonPath("$.externalId").value(DEFAULT_EXTERNAL_ID))
+            .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
+            .andExpect(jsonPath("$.postalCode").value(DEFAULT_POSTAL_CODE))
+            .andExpect(jsonPath("$.city").value(DEFAULT_CITY))
+            .andExpect(jsonPath("$.streetAddress").value(DEFAULT_STREET_ADDRESS));
     }
 
     @Test
@@ -349,43 +349,5 @@ public class CompanyResourceIT {
         // Validate the database contains one less item
         List<Company> companyList = companyRepository.findAll();
         assertThat(companyList).hasSize(databaseSizeBeforeDelete - 1);
-    }
-
-    @Test
-    @Transactional
-    public void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(Company.class);
-        Company company1 = new Company();
-        company1.setId(1L);
-        Company company2 = new Company();
-        company2.setId(company1.getId());
-        assertThat(company1).isEqualTo(company2);
-        company2.setId(2L);
-        assertThat(company1).isNotEqualTo(company2);
-        company1.setId(null);
-        assertThat(company1).isNotEqualTo(company2);
-    }
-
-    @Test
-    @Transactional
-    public void dtoEqualsVerifier() throws Exception {
-        TestUtil.equalsVerifier(CompanyDTO.class);
-        CompanyDTO companyDTO1 = new CompanyDTO();
-        companyDTO1.setId(1L);
-        CompanyDTO companyDTO2 = new CompanyDTO();
-        assertThat(companyDTO1).isNotEqualTo(companyDTO2);
-        companyDTO2.setId(companyDTO1.getId());
-        assertThat(companyDTO1).isEqualTo(companyDTO2);
-        companyDTO2.setId(2L);
-        assertThat(companyDTO1).isNotEqualTo(companyDTO2);
-        companyDTO1.setId(null);
-        assertThat(companyDTO1).isNotEqualTo(companyDTO2);
-    }
-
-    @Test
-    @Transactional
-    public void testEntityFromId() {
-        assertThat(companyMapper.fromId(42L).getId()).isEqualTo(42);
-        assertThat(companyMapper.fromId(null)).isNull();
     }
 }

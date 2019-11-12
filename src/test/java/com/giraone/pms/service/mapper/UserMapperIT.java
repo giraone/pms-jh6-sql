@@ -1,6 +1,5 @@
 package com.giraone.pms.service.mapper;
 
-
 import com.giraone.pms.PmssqlApp;
 import com.giraone.pms.domain.User;
 import com.giraone.pms.service.dto.UserDTO;
