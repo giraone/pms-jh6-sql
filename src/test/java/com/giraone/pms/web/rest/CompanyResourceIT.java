@@ -221,7 +221,7 @@ public class CompanyResourceIT {
             .andExpect(jsonPath("$.[*].city").value(hasItem(DEFAULT_CITY.toString())))
             .andExpect(jsonPath("$.[*].streetAddress").value(hasItem(DEFAULT_STREET_ADDRESS.toString())));
     }
-    
+
     @SuppressWarnings({"unchecked"})
     public void getAllCompaniesWithEagerRelationshipsIsEnabled() throws Exception {
         CompanyResource companyResource = new CompanyResource(companyServiceMock);
@@ -352,43 +352,5 @@ public class CompanyResourceIT {
         // Validate the database contains one less item
         List<Company> companyList = companyRepository.findAll();
         assertThat(companyList).hasSize(databaseSizeBeforeDelete - 1);
-    }
-
-    @Test
-    @Transactional
-    void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(Company.class);
-        Company company1 = new Company();
-        company1.setId(1L);
-        Company company2 = new Company();
-        company2.setId(company1.getId());
-        assertThat(company1).isEqualTo(company2);
-        company2.setId(2L);
-        assertThat(company1).isNotEqualTo(company2);
-        company1.setId(null);
-        assertThat(company1).isNotEqualTo(company2);
-    }
-
-    @Test
-    @Transactional
-    void dtoEqualsVerifier() throws Exception {
-        TestUtil.equalsVerifier(CompanyDTO.class);
-        CompanyDTO companyDTO1 = new CompanyDTO();
-        companyDTO1.setId(1L);
-        CompanyDTO companyDTO2 = new CompanyDTO();
-        assertThat(companyDTO1).isNotEqualTo(companyDTO2);
-        companyDTO2.setId(companyDTO1.getId());
-        assertThat(companyDTO1).isEqualTo(companyDTO2);
-        companyDTO2.setId(2L);
-        assertThat(companyDTO1).isNotEqualTo(companyDTO2);
-        companyDTO1.setId(null);
-        assertThat(companyDTO1).isNotEqualTo(companyDTO2);
-    }
-
-    @Test
-    @Transactional
-    void testEntityFromId() {
-        assertThat(companyMapper.fromId(42L).getId()).isEqualTo(42);
-        assertThat(companyMapper.fromId(null)).isNull();
     }
 }

@@ -1,15 +1,16 @@
 import { Component, OnInit } from '@angular/core';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
 import * as moment from 'moment';
 import { JhiAlertService } from 'ng-jhipster';
 import { IEmployee, Employee } from 'app/shared/model/employee.model';
 import { EmployeeService } from './employee.service';
 import { ICompany } from 'app/shared/model/company.model';
-import { CompanyService } from 'app/entities/company';
+import { CompanyService } from 'app/entities/company/company.service';
 
 @Component({
   selector: 'jhi-employee-update',
@@ -48,11 +49,7 @@ export class EmployeeUpdateComponent implements OnInit {
     });
     this.companyService
       .query()
-      .pipe(
-        filter((mayBeOk: HttpResponse<ICompany[]>) => mayBeOk.ok),
-        map((response: HttpResponse<ICompany[]>) => response.body)
-      )
-      .subscribe((res: ICompany[]) => (this.companies = res), (res: HttpErrorResponse) => this.onError(res.message));
+      .subscribe((res: HttpResponse<ICompany[]>) => (this.companies = res.body), (res: HttpErrorResponse) => this.onError(res.message));
   }
 
   updateForm(employee: IEmployee) {

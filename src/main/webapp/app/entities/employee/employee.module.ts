@@ -1,18 +1,12 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { JhiLanguageService } from 'ng-jhipster';
-import { JhiLanguageHelper } from 'app/core';
 
-import { PmssqlSharedModule } from 'app/shared';
-import {
-  EmployeeComponent,
-  EmployeeDetailComponent,
-  EmployeeUpdateComponent,
-  EmployeeDeletePopupComponent,
-  EmployeeDeleteDialogComponent,
-  employeeRoute,
-  employeePopupRoute
-} from './';
+import { PmssqlSharedModule } from 'app/shared/shared.module';
+import { EmployeeComponent } from './employee.component';
+import { EmployeeDetailComponent } from './employee-detail.component';
+import { EmployeeUpdateComponent } from './employee-update.component';
+import { EmployeeDeletePopupComponent, EmployeeDeleteDialogComponent } from './employee-delete-dialog.component';
+import { employeeRoute, employeePopupRoute } from './employee.route';
 
 const ENTITY_STATES = [...employeeRoute, ...employeePopupRoute];
 
@@ -25,16 +19,6 @@ const ENTITY_STATES = [...employeeRoute, ...employeePopupRoute];
     EmployeeDeleteDialogComponent,
     EmployeeDeletePopupComponent
   ],
-  entryComponents: [EmployeeComponent, EmployeeUpdateComponent, EmployeeDeleteDialogComponent, EmployeeDeletePopupComponent],
-  providers: [{ provide: JhiLanguageService, useClass: JhiLanguageService }],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  entryComponents: [EmployeeDeleteDialogComponent]
 })
-export class PmssqlEmployeeModule {
-  constructor(private languageService: JhiLanguageService, private languageHelper: JhiLanguageHelper) {
-    this.languageHelper.language.subscribe((languageKey: string) => {
-      if (languageKey !== undefined) {
-        this.languageService.changeLanguage(languageKey);
-      }
-    });
-  }
-}
+export class PmssqlEmployeeModule {}

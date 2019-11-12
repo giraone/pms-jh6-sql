@@ -1,10 +1,5 @@
 import { Moment } from 'moment';
-
-export const enum GenderType {
-  UNKNOWN = 'UNKNOWN',
-  MALE = 'MALE',
-  FEMALE = 'FEMALE'
-}
+import { GenderType } from 'app/shared/model/enumerations/gender-type.model';
 
 export interface IEmployee {
   id?: number;

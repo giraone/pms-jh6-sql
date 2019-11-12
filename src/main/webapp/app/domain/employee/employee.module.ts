@@ -1,7 +1,7 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { PmssqlSharedModule } from '../../shared';
+import { PmssqlSharedModule } from 'app/shared/shared.module';
 import { EmployeeComponent, employeeRoute } from './';
 
 const ENTITY_STATES = [...employeeRoute];

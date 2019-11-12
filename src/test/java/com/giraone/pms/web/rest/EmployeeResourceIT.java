@@ -252,7 +252,7 @@ public class EmployeeResourceIT {
             .andExpect(jsonPath("$.[*].city").value(hasItem(DEFAULT_CITY)))
             .andExpect(jsonPath("$.[*].streetAddress").value(hasItem(DEFAULT_STREET_ADDRESS)));
     }
-    
+
     @Test
     @Transactional
     void getEmployee() throws Exception {
@@ -356,43 +356,5 @@ public class EmployeeResourceIT {
         // Validate the database contains one less item
         List<Employee> employeeList = employeeRepository.findAll();
         assertThat(employeeList).hasSize(databaseSizeBeforeDelete - 1);
-    }
-
-    @Test
-    @Transactional
-    void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(Employee.class);
-        Employee employee1 = new Employee();
-        employee1.setId(1L);
-        Employee employee2 = new Employee();
-        employee2.setId(employee1.getId());
-        assertThat(employee1).isEqualTo(employee2);
-        employee2.setId(2L);
-        assertThat(employee1).isNotEqualTo(employee2);
-        employee1.setId(null);
-        assertThat(employee1).isNotEqualTo(employee2);
-    }
-
-    @Test
-    @Transactional
-    void dtoEqualsVerifier() throws Exception {
-        TestUtil.equalsVerifier(EmployeeDTO.class);
-        EmployeeDTO employeeDTO1 = new EmployeeDTO();
-        employeeDTO1.setId(1L);
-        EmployeeDTO employeeDTO2 = new EmployeeDTO();
-        assertThat(employeeDTO1).isNotEqualTo(employeeDTO2);
-        employeeDTO2.setId(employeeDTO1.getId());
-        assertThat(employeeDTO1).isEqualTo(employeeDTO2);
-        employeeDTO2.setId(2L);
-        assertThat(employeeDTO1).isNotEqualTo(employeeDTO2);
-        employeeDTO1.setId(null);
-        assertThat(employeeDTO1).isNotEqualTo(employeeDTO2);
-    }
-
-    @Test
-    @Transactional
-    void testEntityFromId() {
-        assertThat(employeeMapper.fromId(42L).getId()).isEqualTo(42);
-        assertThat(employeeMapper.fromId(null)).isNull();
     }
 }

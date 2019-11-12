@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
-import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes } from '@angular/router';
-import { JhiPaginationUtil, JhiResolvePagingParams } from 'ng-jhipster';
-import { UserRouteAccessService } from 'app/core';
+import { Resolve, ActivatedRouteSnapshot, Routes } from '@angular/router';
+import { JhiResolvePagingParams } from 'ng-jhipster';
+import { UserRouteAccessService } from 'app/core/auth/user-route-access-service';
 import { Observable, of } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { Company } from 'app/shared/model/company.model';
 import { CompanyService } from './company.service';
 import { CompanyComponent } from './company.component';
@@ -17,13 +17,10 @@ import { ICompany } from 'app/shared/model/company.model';
 export class CompanyResolve implements Resolve<ICompany> {
   constructor(private service: CompanyService) {}
 
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<ICompany> {
-    const id = route.params['id'] ? route.params['id'] : null;
+  resolve(route: ActivatedRouteSnapshot): Observable<ICompany> {
+    const id = route.params['id'];
     if (id) {
-      return this.service.find(id).pipe(
-        filter((response: HttpResponse<Company>) => response.ok),
-        map((company: HttpResponse<Company>) => company.body)
-      );
+      return this.service.find(id).pipe(map((company: HttpResponse<Company>) => company.body));
     }
     return of(new Company());
   }

@@ -5,10 +5,10 @@ import { JhiEventManager, JhiParseLinks, JhiAlertService } from 'ng-jhipster';
 
 import { IEmployee } from '../../shared/model/employee.model';
 import { ICompany } from '../../shared/model/company.model';
-import { AccountService } from '../../core';
-import { JhiLanguageHelper } from '../../core';
+import { AccountService } from 'app/core/auth/account.service';
+import { JhiLanguageService } from 'ng-jhipster';
 
-import { ITEMS_PER_PAGE } from '../../shared';
+import { ITEMS_PER_PAGE } from 'app/shared/constants/pagination.constants';
 import { EmployeeService } from '../../entities/employee/employee.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
@@ -42,7 +42,7 @@ export class EmployeeComponent implements OnInit, OnDestroy {
     protected eventManager: JhiEventManager,
     protected parseLinks: JhiParseLinks,
     protected accountService: AccountService,
-    protected languageHelper: JhiLanguageHelper
+    private languageService: JhiLanguageService
   ) {
     this.input = '';
     this.employees = [];
@@ -58,8 +58,8 @@ export class EmployeeComponent implements OnInit, OnDestroy {
     this.totalItems = 0;
 
     this.languageKey = 'de';
-    this.languageHelper.language.subscribe((languageKey: string) => {
-      this.languageKey = languageKey;
+    this.languageService.getCurrent().then(current => {
+      this.languageKey = current;
     });
     this.lastTimer = 0;
     this.useTypeAhead = false;
@@ -69,13 +69,12 @@ export class EmployeeComponent implements OnInit, OnDestroy {
         debounceTime(200),
         distinctUntilChanged()
       )
-      .subscribe(value => {
+      .subscribe(() => {
         this.search();
       });
   }
 
   load() {
-    console.log('load ' + this.getExternalCompanyId() + ' "' + this.input + '"');
     const filterValue = this.input.trim();
     const params = {
       companyExternalId: this.getExternalCompanyId(),
@@ -89,7 +88,7 @@ export class EmployeeComponent implements OnInit, OnDestroy {
         const timer = parseInt(res.headers.get('X-Timer'), 10);
         if (!isNaN(timer)) {
           if (this.lastTimer > timer) {
-            console.log('Skipped older request!');
+            // Skip older request
             return;
           }
           this.lastTimer = timer;
@@ -127,7 +126,7 @@ export class EmployeeComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.accountService.identity().then(account => {
+    this.accountService.identity().subscribe(account => {
       this.currentAccount = account;
       this.currentAccountIsAdmin = this.accountService.hasAnyAuthority(['ROLE_ADMIN']);
     });
@@ -158,7 +157,7 @@ export class EmployeeComponent implements OnInit, OnDestroy {
   }
 
   registerChangeInEmployees() {
-    this.eventSubscriber = this.eventManager.subscribe('employeeListModification', response => this.reset());
+    this.eventSubscriber = this.eventManager.subscribe('employeeListModification', () => this.reset());
   }
 
   sort() {
