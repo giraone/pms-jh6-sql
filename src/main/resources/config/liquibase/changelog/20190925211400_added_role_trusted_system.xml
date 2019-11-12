@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet author="me" id="20190925211400_added_role_trusted_system">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">select count(*) from jhi_authority where name = 'ROLE_TRUSTEDSYSTEM'</sqlCheck>
+        </preConditions>
+
+        <comment>jhi_authority does not contain ROLE_TRUSTEDSYSTEM</comment>
+
+        <insert tableName="jhi_authority">
+            <column name="name" value="ROLE_TRUSTEDSYSTEM"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

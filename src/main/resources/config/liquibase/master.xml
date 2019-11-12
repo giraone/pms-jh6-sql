@@ -23,5 +23,6 @@
 
     <include file="config/liquibase/changelog/20190628100000_added_EmployeeName.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190628110000_added_indices.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190925211400_added_role_trusted_system.xml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>
