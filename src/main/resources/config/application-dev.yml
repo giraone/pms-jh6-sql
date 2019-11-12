@@ -46,11 +46,12 @@ spring:
     username: pmssql
     password:
     hikari:
-      poolName: Hikari
+      pool-name: Hikari
       auto-commit: false
+      maximum-pool-size: 50
   h2:
     console:
-      enabled: false
+      enabled: true
   jpa:
     database-platform: io.github.jhipster.domain.util.FixedH2Dialect
     database: H2
