@@ -20,7 +20,7 @@ export class SettingsComponent implements OnInit {
     email: [undefined, [Validators.required, Validators.minLength(5), Validators.maxLength(254), Validators.email]],
     activated: [false],
     authorities: [[]],
-    langKey: ['en'],
+    langKey: ['de'],
     login: [],
     imageUrl: []
   });

@@ -5,6 +5,7 @@ import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import * as moment from 'moment';
 import { JhiAlertService } from 'ng-jhipster';
 import { IEmployee, Employee } from 'app/shared/model/employee.model';
