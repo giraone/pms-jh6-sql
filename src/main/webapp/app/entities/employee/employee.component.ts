@@ -3,12 +3,13 @@ import { HttpHeaders, HttpResponse } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { JhiEventManager, JhiParseLinks } from 'ng-jhipster';
-import { JhiLanguageService } from 'ng-jhipster';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { IEmployee } from 'app/shared/model/employee.model';
 
 import { ITEMS_PER_PAGE } from 'app/shared/constants/pagination.constants';
 import { EmployeeService } from './employee.service';
+import { EmployeeDeleteDialogComponent } from './employee-delete-dialog.component';
 
 @Component({
   selector: 'jhi-employee',
@@ -35,7 +36,7 @@ export class EmployeeComponent implements OnInit, OnDestroy {
     protected activatedRoute: ActivatedRoute,
     protected router: Router,
     protected eventManager: JhiEventManager,
-    private languageService: JhiLanguageService
+    protected modalService: NgbModal
   ) {
     this.itemsPerPage = ITEMS_PER_PAGE;
     this.routeData = this.activatedRoute.data.subscribe(data => {
@@ -43,10 +44,6 @@ export class EmployeeComponent implements OnInit, OnDestroy {
       this.previousPage = data.pagingParams.page;
       this.reverse = data.pagingParams.ascending;
       this.predicate = data.pagingParams.predicate;
-    });
-    this.languageKey = 'de';
-    this.languageService.getCurrent().then(current => {
-      this.languageKey = current;
     });
   }
 
@@ -105,6 +102,11 @@ export class EmployeeComponent implements OnInit, OnDestroy {
 
   registerChangeInEmployees() {
     this.eventSubscriber = this.eventManager.subscribe('employeeListModification', () => this.loadAll());
+  }
+
+  delete(employee: IEmployee) {
+    const modalRef = this.modalService.open(EmployeeDeleteDialogComponent, { size: 'lg', backdrop: 'static' });
+    modalRef.componentInstance.employee = employee;
   }
 
   sort() {

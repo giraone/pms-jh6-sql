@@ -10,7 +10,6 @@ import { EmployeeService } from './employee.service';
 import { EmployeeComponent } from './employee.component';
 import { EmployeeDetailComponent } from './employee-detail.component';
 import { EmployeeUpdateComponent } from './employee-update.component';
-import { EmployeeDeletePopupComponent } from './employee-delete-dialog.component';
 import { IEmployee } from 'app/shared/model/employee.model';
 
 @Injectable({ providedIn: 'root' })
@@ -75,21 +74,5 @@ export const employeeRoute: Routes = [
       pageTitle: 'pmssqlApp.employee.home.title'
     },
     canActivate: [UserRouteAccessService]
-  }
-];
-
-export const employeePopupRoute: Routes = [
-  {
-    path: ':id/delete',
-    component: EmployeeDeletePopupComponent,
-    resolve: {
-      employee: EmployeeResolve
-    },
-    data: {
-      authorities: ['ROLE_USER'],
-      pageTitle: 'pmssqlApp.employee.home.title'
-    },
-    canActivate: [UserRouteAccessService],
-    outlet: 'popup'
   }
 ];

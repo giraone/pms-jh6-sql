@@ -4,7 +4,7 @@
         <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-employee" [routerLink]="['/employee/new']">
             <fa-icon [icon]="'plus'"></fa-icon>
             <span  jhiTranslate="pmssqlApp.employee.home.createLabel">
-            Create new Employee
+            Create a new Employee
             </span>
         </button>
     </h2>
@@ -42,7 +42,7 @@
                 <td>{{employee.streetAddress}}</td>
                 <td>
                     <div *ngIf="employee.companyId">
-                        <a [routerLink]="['../company', employee.companyId , 'view' ]" >{{employee.companyId}}</a>
+                        <a [routerLink]="['/company', employee.companyId , 'view' ]" >{{employee.companyId}}</a>
                     </div>
                 </td>
                 <td class="text-right">
@@ -59,10 +59,7 @@
                             <fa-icon [icon]="'pencil-alt'"></fa-icon>
                             <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
                         </button>
-                        <button type="submit"
-                                [routerLink]="['/', 'employee', { outlets: { popup: employee.id + '/delete'} }]"
-                                replaceUrl="true"
-                                queryParamsHandling="merge"
+                        <button type="submit" (click)="delete(employee)"
                                 class="btn btn-danger btn-sm">
                             <fa-icon [icon]="'times'"></fa-icon>
                             <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
