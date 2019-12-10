@@ -49,7 +49,7 @@ public class Employee implements Serializable {
     @Column(name = "street_address")
     private String streetAddress;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(optional = false)
     @NotNull
     @JsonIgnoreProperties("employees")
     private Company company;

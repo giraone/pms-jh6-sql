@@ -3,11 +3,13 @@ import { HttpHeaders, HttpResponse } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { JhiEventManager, JhiParseLinks } from 'ng-jhipster';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { ICompany } from 'app/shared/model/company.model';
 
 import { ITEMS_PER_PAGE } from 'app/shared/constants/pagination.constants';
 import { CompanyService } from './company.service';
+import { CompanyDeleteDialogComponent } from './company-delete-dialog.component';
 
 @Component({
   selector: 'jhi-company',
@@ -32,7 +34,8 @@ export class CompanyComponent implements OnInit, OnDestroy {
     protected parseLinks: JhiParseLinks,
     protected activatedRoute: ActivatedRoute,
     protected router: Router,
-    protected eventManager: JhiEventManager
+    protected eventManager: JhiEventManager,
+    protected modalService: NgbModal
   ) {
     this.itemsPerPage = ITEMS_PER_PAGE;
     this.routeData = this.activatedRoute.data.subscribe(data => {
@@ -98,6 +101,11 @@ export class CompanyComponent implements OnInit, OnDestroy {
 
   registerChangeInCompanies() {
     this.eventSubscriber = this.eventManager.subscribe('companyListModification', () => this.loadAll());
+  }
+
+  delete(company: ICompany) {
+    const modalRef = this.modalService.open(CompanyDeleteDialogComponent, { size: 'lg', backdrop: 'static' });
+    modalRef.componentInstance.company = company;
   }
 
   sort() {

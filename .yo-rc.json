@@ -4,7 +4,7 @@
       "packageName": "com.giraone.pms",
       "nativeLanguage": "en"
     },
-    "jhipsterVersion": "6.5.0",
+    "jhipsterVersion": "6.5.1",
     "applicationType": "monolith",
     "baseName": "pmssql",
     "packageName": "com.giraone.pms",
