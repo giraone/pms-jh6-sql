@@ -17,7 +17,7 @@
         </div>
         <div class="divLeft">
             <button type="submit" class="btn btn-info btn-sm">
-                <fa-icon icon="'search'"></fa-icon>
+                <fa-icon icon="search"></fa-icon>
                 <span class="d-none d-md-inline" jhiTranslate="pmssqlApp.query.search">Search</span>
             </button>
         </div>
@@ -33,14 +33,14 @@
         <table class="table table-striped">
             <thead>
             <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="reset.bind(this)">
-            <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon icon="'sort'"></fa-icon></th>
-            <th jhiSortBy="surname"><span jhiTranslate="pmssqlApp.employee.surname">Surname</span> <fa-icon icon="'sort'"></fa-icon></th>
-            <th jhiSortBy="givenName"><span jhiTranslate="pmssqlApp.employee.givenName">Given Name</span> <fa-icon icon="'sort'"></fa-icon></th>
-            <th jhiSortBy="dateOfBirth"><span jhiTranslate="pmssqlApp.employee.dateOfBirthShort">DoB</span> <fa-icon icon="'sort'"></fa-icon></th>
-            <th jhiSortBy="postalCode"><span jhiTranslate="pmssqlApp.employee.postalCode">Postal Code</span> <fa-icon icon="'sort'"></fa-icon></th>
-            <th jhiSortBy="city"><span jhiTranslate="pmssqlApp.employee.city">City</span> <fa-icon icon="'sort'"></fa-icon></th>
-            <th jhiSortBy="streetAddress"><span jhiTranslate="pmssqlApp.employee.streetAddress">Street Address</span> <fa-icon icon="'sort'"></fa-icon></th>
-            <th jhiSortBy="companyId"><span jhiTranslate="pmssqlApp.employee.company">Company</span> <fa-icon icon="'sort'"></fa-icon></th>
+            <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
+            <th jhiSortBy="surname"><span jhiTranslate="pmssqlApp.employee.surname">Surname</span> <fa-icon icon="sort"></fa-icon></th>
+            <th jhiSortBy="givenName"><span jhiTranslate="pmssqlApp.employee.givenName">Given Name</span> <fa-icon icon="sort"></fa-icon></th>
+            <th jhiSortBy="dateOfBirth"><span jhiTranslate="pmssqlApp.employee.dateOfBirthShort">DoB</span> <fa-icon icon="sort"></fa-icon></th>
+            <th jhiSortBy="postalCode"><span jhiTranslate="pmssqlApp.employee.postalCode">Postal Code</span> <fa-icon icon="sort"></fa-icon></th>
+            <th jhiSortBy="city"><span jhiTranslate="pmssqlApp.employee.city">City</span> <fa-icon icon="sort"></fa-icon></th>
+            <th jhiSortBy="streetAddress"><span jhiTranslate="pmssqlApp.employee.streetAddress">Street Address</span> <fa-icon icon="sort"></fa-icon></th>
+            <th jhiSortBy="companyId"><span jhiTranslate="pmssqlApp.employee.company">Company</span> <fa-icon icon="sort"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
@@ -64,13 +64,13 @@
                         <button type="submit"
                                 [routerLink]="['/employee', employee.id, 'view' ]"
                                 class="btn btn-info btn-sm">
-                            <fa-icon icon="'eye'"></fa-icon>
+                            <fa-icon icon="eye"></fa-icon>
                             <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
                         </button>
                         <button type="submit"
                                 [routerLink]="['/employee', employee.id, 'edit']"
                                 class="btn btn-primary btn-sm">
-                            <fa-icon icon="'pencil-alt'"></fa-icon>
+                            <fa-icon icon="pencil-alt"></fa-icon>
                             <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
                         </button>
                         <button type="submit"
@@ -78,7 +78,7 @@
                                 replaceUrl="true"
                                 queryParamsHandling="merge"
                                 class="btn btn-danger btn-sm">
-                            <fa-icon icon="'times'"></fa-icon>
+                            <fa-icon icon="times"></fa-icon>
                             <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
                         </button>
                     </div>
