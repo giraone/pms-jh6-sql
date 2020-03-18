@@ -25,16 +25,16 @@ while (( d < 10 )); do
     count=$(curl "${BASE_URL}/api/employee-list" -s -H 'Accept: application/json' -H 'Content-Type: application/json' \
      -H "Authorization: Bearer ${token}" -X PUT  --data "@${file}")
     if [[ $? != 0 || $count != 1000 ]]; then
-      echo $count
+      echo "$count"
       exit 1
     fi
     typeset -i end=$(date +%s)
-    let secs=$end-$start
+    (( secs=end-start ))
     echo " processing time was ${secs} seconds"
-    let f+=1
+    (( f+=1 ))
   done
 
   sleep 5
-  let d+=1
+  (( d+=1 ))
 done
 
