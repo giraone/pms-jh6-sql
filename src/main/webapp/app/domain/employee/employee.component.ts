@@ -21,10 +21,10 @@ export class EmployeeComponent implements OnInit, OnDestroy {
   inputSubject: Subject<String> = new Subject();
   employees: IEmployee[];
   currentAccount: any;
-  currentAccountIsAdmin: boolean;
+  currentAccountIsAdmin = false;
   currentCompanies: ICompany[];
-  currentCompany: ICompany;
-  eventSubscriber: Subscription;
+  currentCompany: ICompany | null = null;
+  eventSubscriber: Subscription | null = null;
   itemsPerPage: number;
   links: any;
   page: any;
@@ -47,7 +47,6 @@ export class EmployeeComponent implements OnInit, OnDestroy {
     this.input = '';
     this.employees = [];
     this.currentCompanies = [];
-    this.currentCompany = null;
     this.itemsPerPage = ITEMS_PER_PAGE;
     this.page = 0;
     this.links = {
@@ -64,17 +63,12 @@ export class EmployeeComponent implements OnInit, OnDestroy {
     this.lastTimer = 0;
     this.useTypeAhead = false;
 
-    this.inputSubject
-      .pipe(
-        debounceTime(200),
-        distinctUntilChanged()
-      )
-      .subscribe(() => {
-        this.search();
-      });
+    this.inputSubject.pipe(debounceTime(200), distinctUntilChanged()).subscribe(() => {
+      this.search();
+    });
   }
 
-  load() {
+  load(): void {
     const filterValue = this.input.trim();
     const params = {
       companyExternalId: this.getExternalCompanyId(),
@@ -85,7 +79,8 @@ export class EmployeeComponent implements OnInit, OnDestroy {
     };
     this.employeeService.query(params).subscribe(
       (res: HttpResponse<IEmployee[]>) => {
-        const timer = parseInt(res.headers.get('X-Timer'), 10);
+        const xTimer: string | null = res.headers.get('X-Timer');
+        const timer = parseInt(xTimer != null ? xTimer : '10', 10);
         if (!isNaN(timer)) {
           if (this.lastTimer > timer) {
             // Skip older request
@@ -93,7 +88,9 @@ export class EmployeeComponent implements OnInit, OnDestroy {
           }
           this.lastTimer = timer;
         }
-        this.paginateEmployees(res.body, res.headers);
+        if (res.body) {
+          this.paginateEmployees(res.body, res.headers);
+        }
       },
       (res: HttpErrorResponse) => {
         if (res.status === 404) {
@@ -105,34 +102,34 @@ export class EmployeeComponent implements OnInit, OnDestroy {
     );
   }
 
-  filterChanged() {
+  filterChanged(): void {
     this.inputSubject.next(this.input);
   }
 
-  reset() {
+  reset(): void {
     this.page = 0;
     this.employees = [];
   }
 
-  search() {
+  search(): boolean {
     this.reset();
     this.load();
     return false;
   }
 
-  loadPage(page) {
+  loadPage(page: number): void {
     this.page = page;
     this.load();
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.accountService.identity().subscribe(account => {
       this.currentAccount = account;
       this.currentAccountIsAdmin = this.accountService.hasAnyAuthority(['ROLE_ADMIN']);
     });
     this.employeeService.findCompanies().subscribe(
       (res: HttpResponse<ICompany[]>) => {
-        this.currentCompanies = res.body;
+        this.currentCompanies = res.body ? res.body : [];
         this.currentCompany = this.currentCompanies.length === 0 ? null : this.currentCompanies[0];
         this.load();
       },
@@ -148,19 +145,21 @@ export class EmployeeComponent implements OnInit, OnDestroy {
     this.registerChangeInEmployees();
   }
 
-  ngOnDestroy() {
-    this.eventManager.destroy(this.eventSubscriber);
+  ngOnDestroy(): void {
+    if (this.eventSubscriber) {
+      this.eventManager.destroy(this.eventSubscriber);
+    }
   }
 
-  trackId(index: number, item: IEmployee) {
+  trackId(index: number, item: IEmployee): number | undefined {
     return item.id;
   }
 
-  registerChangeInEmployees() {
+  registerChangeInEmployees(): void {
     this.eventSubscriber = this.eventManager.subscribe('employeeListModification', () => this.reset());
   }
 
-  sort() {
+  sort(): string[] {
     const result = [this.predicate + ',' + (this.reverse ? 'asc' : 'desc')];
     if (this.predicate !== 'id') {
       result.push('id');
@@ -168,13 +167,17 @@ export class EmployeeComponent implements OnInit, OnDestroy {
     return result;
   }
 
-  isAdmin() {
+  isAdmin(): boolean {
     return this.currentAccountIsAdmin;
   }
 
-  protected paginateEmployees(data: IEmployee[], headers: HttpHeaders) {
-    this.links = this.parseLinks.parse(headers.get('link'));
-    this.totalItems = parseInt(headers.get('X-Total-Count'), 10);
+  protected paginateEmployees(data: IEmployee[], headers: HttpHeaders): void {
+    const linkHeader: string | null = headers.get('link');
+    if (linkHeader) {
+      this.links = this.parseLinks.parse(linkHeader);
+    }
+
+    this.totalItems = Number(headers.get('X-Total-Count'));
     if (this.page === 0) {
       this.employees.length = 0;
     }
@@ -183,12 +186,12 @@ export class EmployeeComponent implements OnInit, OnDestroy {
     }
   }
 
-  protected onError(errorMessage: string, params?: any) {
-    this.jhiAlertService.error(errorMessage, params, null);
+  protected onError(errorMessage: string, params?: any): void {
+    this.jhiAlertService.error(errorMessage, params);
   }
 
-  protected getExternalCompanyId() {
-    if (this.currentCompany == null) {
+  protected getExternalCompanyId(): string {
+    if (this.currentCompany == null || this.currentCompany.externalId == null) {
       return 'NO-COMPANY';
     }
     return this.currentCompany.externalId;
