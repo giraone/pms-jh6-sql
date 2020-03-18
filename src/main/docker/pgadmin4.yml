@@ -1,9 +1,16 @@
-version: '2'
+version: '3.5'
 services:
   pgadmin4:
     image: dpage/pgadmin4:latest
+    hostname: pgadmin4
+    container_name: pmssql-pgadmin4
+    networks:
+      - pms
     environment:
       - PGADMIN_DEFAULT_EMAIL=admin
       - PGADMIN_DEFAULT_PASSWORD=admin
     ports:
-      - 80:80
+      - 8888:80
+
+networks:
+  pms:
