@@ -3,7 +3,7 @@
     xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
     xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd
                         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
     
@@ -12,7 +12,7 @@
     -->
     <changeSet id="20190628085052-1" author="jhipster">
         <createTable tableName="company" remarks="The Company entity.">
-            <column name="id" type="bigint" autoIncrement="${autoIncrement}">
+            <column name="id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="external_id" type="varchar(255)">
@@ -60,7 +60,7 @@
     -->
     <changeSet id="20190628085052-1-data" author="jhipster" context="faker">
         <loadData
-                  file="config/liquibase/data/company.csv"
+                  file="config/liquibase/fake-data/company.csv"
                   separator=";"
                   tableName="company">
             <column name="id" type="numeric"/>

@@ -25,7 +25,7 @@ public interface EmployeeRepositoryCustom<Employee> {
      * @return the saved entities will never be {@literal null}.
      * @throws IllegalArgumentException in case the given entity is {@literal null}.
      */
-    List<Employee> saveAllCustom(Iterable<Employee> employees); // We cannot use saveAll because of same erase on generic!
+    List<Employee> saveAllCustom(Iterable<Employee> employees); // We cannot use saveAll because of same type erasure on generic!
 
     //-- ADDITIONAL ----------------------------------------------------------------------------------------------------
 

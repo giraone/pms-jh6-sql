@@ -15,9 +15,9 @@
 
 logging:
   level:
-    ROOT: WARN
-    com.giraone.pms: INFO
+    ROOT: INFO
     io.github.jhipster: INFO
+    com.giraone.pms: INFO
     # org.hibernate.type: TRACE
     # org.springframework.orm.jpa: INFO
     # org.springframework.transaction: INFO
@@ -46,7 +46,7 @@ spring:
       auto-commit: false
       maximum-pool-size: 50
   jpa:
-    database-platform: io.github.jhipster.domain.util.FixedPostgreSQL95Dialect
+    database-platform: io.github.jhipster.domain.util.FixedPostgreSQL10Dialect
     database: POSTGRESQL
     show-sql: false
     properties:

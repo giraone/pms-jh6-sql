@@ -11,23 +11,23 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Service Interface for managing Company.
+ * Service Interface for managing {@link com.giraone.pms.domain.Company}.
  */
 public interface CompanyService {
 
     /**
      * Save a company.
      *
-     * @param companyDTO the entity to save
-     * @return the persisted entity
+     * @param companyDTO the entity to save.
+     * @return the persisted entity.
      */
     CompanyDTO save(CompanyDTO companyDTO);
 
     /**
      * Get all the companies.
      *
-     * @param pageable the pagination information
-     * @return the list of entities
+     * @param pageable the pagination information.
+     * @return the list of entities.
      */
     Page<CompanyDTO> findAll(Pageable pageable);
 
@@ -40,15 +40,15 @@ public interface CompanyService {
     /**
      * Get all the Company with eager load of many-to-many relationships.
      *
-     * @return the list of entities
+     * @return the list of entities.
      */
     Page<CompanyDTO> findAllWithEagerRelationships(Pageable pageable);
 
     /**
      * Get the "id" company.
      *
-     * @param id the id of the entity
-     * @return the entity
+     * @param id the id of the entity.
+     * @return the entity.
      */
     Optional<CompanyDTO> findOne(long id);
 
@@ -63,7 +63,7 @@ public interface CompanyService {
     /**
      * Delete the "id" company.
      *
-     * @param id the id of the entity
+     * @param id the id of the entity.
      */
     void delete(long id);
 

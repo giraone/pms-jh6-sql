@@ -1,4 +1,5 @@
 package com.giraone.pms.domain;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.giraone.pms.service.util.StringUtil;
 import org.hibernate.annotations.Cache;
@@ -8,6 +9,7 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
+import java.util.Objects;
 import java.time.LocalDate;
 
 import com.giraone.pms.domain.enumeration.GenderType;

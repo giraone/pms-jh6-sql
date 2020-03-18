@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+import { HttpResponse } from '@angular/common/http';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { JhiAlertService } from 'ng-jhipster';
-import { CompanyService } from './company.service';
+
 import { ICompany, Company } from 'app/shared/model/company.model';
+import { CompanyService } from './company.service';
 import { IUser } from 'app/core/user/user.model';
 import { UserService } from 'app/core/user/user.service';
 
@@ -16,10 +15,8 @@ import { UserService } from 'app/core/user/user.service';
   templateUrl: './company-update.component.html'
 })
 export class CompanyUpdateComponent implements OnInit {
-  company: ICompany;
-  isSaving: boolean;
-
-  users: IUser[];
+  isSaving = false;
+  users: IUser[] = [];
 
   editForm = this.fb.group({
     id: [],
@@ -32,24 +29,21 @@ export class CompanyUpdateComponent implements OnInit {
   });
 
   constructor(
-    protected jhiAlertService: JhiAlertService,
     protected companyService: CompanyService,
     protected userService: UserService,
     protected activatedRoute: ActivatedRoute,
     private fb: FormBuilder
   ) {}
 
-  ngOnInit() {
-    this.isSaving = false;
+  ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ company }) => {
       this.updateForm(company);
+
+      this.userService.query().subscribe((res: HttpResponse<IUser[]>) => (this.users = res.body || []));
     });
-    this.userService
-      .query()
-      .subscribe((res: HttpResponse<IUser[]>) => (this.users = res.body), (res: HttpErrorResponse) => this.onError(res.message));
   }
 
-  updateForm(company: ICompany) {
+  updateForm(company: ICompany): void {
     this.editForm.patchValue({
       id: company.id,
       externalId: company.externalId,
@@ -61,11 +55,11 @@ export class CompanyUpdateComponent implements OnInit {
     });
   }
 
-  previousState() {
+  previousState(): void {
     window.history.back();
   }
 
-  save() {
+  save(): void {
     this.isSaving = true;
     const company = this.createFromForm();
     if (company.id !== undefined) {
@@ -78,37 +72,37 @@ export class CompanyUpdateComponent implements OnInit {
   private createFromForm(): ICompany {
     return {
       ...new Company(),
-      id: this.editForm.get(['id']).value,
-      externalId: this.editForm.get(['externalId']).value,
-      name: this.editForm.get(['name']).value,
-      postalCode: this.editForm.get(['postalCode']).value,
-      city: this.editForm.get(['city']).value,
-      streetAddress: this.editForm.get(['streetAddress']).value,
-      users: this.editForm.get(['users']).value
+      id: this.editForm.get(['id'])!.value,
+      externalId: this.editForm.get(['externalId'])!.value,
+      name: this.editForm.get(['name'])!.value,
+      postalCode: this.editForm.get(['postalCode'])!.value,
+      city: this.editForm.get(['city'])!.value,
+      streetAddress: this.editForm.get(['streetAddress'])!.value,
+      users: this.editForm.get(['users'])!.value
     };
   }
 
-  protected subscribeToSaveResponse(result: Observable<HttpResponse<ICompany>>) {
-    result.subscribe(() => this.onSaveSuccess(), () => this.onSaveError());
+  protected subscribeToSaveResponse(result: Observable<HttpResponse<ICompany>>): void {
+    result.subscribe(
+      () => this.onSaveSuccess(),
+      () => this.onSaveError()
+    );
   }
 
-  protected onSaveSuccess() {
+  protected onSaveSuccess(): void {
     this.isSaving = false;
     this.previousState();
   }
 
-  protected onSaveError() {
+  protected onSaveError(): void {
     this.isSaving = false;
   }
-  protected onError(errorMessage: string) {
-    this.jhiAlertService.error(errorMessage, null, null);
-  }
 
-  trackUserById(index: number, item: IUser) {
+  trackById(index: number, item: IUser): any {
     return item.id;
   }
 
-  getSelected(selectedVals: any[], option: any) {
+  getSelected(selectedVals: IUser[], option: IUser): IUser {
     if (selectedVals) {
       for (let i = 0; i < selectedVals.length; i++) {
         if (option.id === selectedVals[i].id) {

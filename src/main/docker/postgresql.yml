@@ -1,11 +1,31 @@
-version: '2'
+version: '3.5'
+
 services:
   pmssql-postgresql:
-    image: postgres:11.5
-    # volumes:
-    #     - ~/volumes/jhipster/pmssql/postgresql/:/var/lib/postgresql/data/
+    image: debezium/postgres:11
+    hostname: postgres
+    container_name: pmssql-postgresql
+    networks:
+      - pms
+    volumes:
+      - ~/volumes/jhipster/pmssql/debezium-postgresql:/var/lib/postgresql/data
     environment:
       - POSTGRES_USER=pmssql
-      - POSTGRES_PASSWORD=
+      - POSTGRES_PASSWORD=pmssql-secret
     ports:
       - 5432:5432
+
+  pgadmin4:
+    image: dpage/pgadmin4:latest
+    hostname: pgadmin4
+    container_name: pmssql-pgadmin4
+    networks:
+      - pms
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+      - 8888:80
+
+networks:
+  pms:
