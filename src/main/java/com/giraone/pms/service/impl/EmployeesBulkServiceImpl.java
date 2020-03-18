@@ -5,7 +5,10 @@ import com.giraone.pms.domain.Employee;
 import com.giraone.pms.domain.User;
 import com.giraone.pms.repository.EmployeeRepository;
 import com.giraone.pms.security.AuthoritiesConstants;
-import com.giraone.pms.service.*;
+import com.giraone.pms.service.CompanyService;
+import com.giraone.pms.service.EmployeeBulkService;
+import com.giraone.pms.service.EmployeeService;
+import com.giraone.pms.service.UserService;
 import com.giraone.pms.service.dto.CompanyDTO;
 import com.giraone.pms.service.dto.EmployeeBulkDTO;
 import com.giraone.pms.service.dto.EmployeeDTO;
@@ -15,7 +18,6 @@ import com.giraone.pms.service.mapper.EmployeeBulkMapper;
 import com.giraone.pms.service.mapper.EmployeeMapper;
 import com.giraone.pms.service.mapper.UserMapper;
 import io.micrometer.core.annotation.Timed;
-import org.apache.commons.codec.language.DoubleMetaphone;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -39,15 +41,12 @@ public class EmployeesBulkServiceImpl implements EmployeeBulkService {
     private final Logger log = LoggerFactory.getLogger(EmployeesBulkServiceImpl.class);
 
     private static final boolean CREATE_INITIAL_USER_FOR_COMPANY = true;
-    private static final boolean WITH_METAPHONE = false;
 
     private static final Set<String> INITIAL_USER_AUTHORITIES = new HashSet<>();
 
     static {
         INITIAL_USER_AUTHORITIES.add(AuthoritiesConstants.USER);
     }
-
-    private final DoubleMetaphone doubleMetaphone = new DoubleMetaphone();
 
     private final EmployeeRepository employeeRepository;
     private final EmployeeBulkMapper employeeBulkMapper;
@@ -96,8 +95,7 @@ public class EmployeesBulkServiceImpl implements EmployeeBulkService {
                 final Company company = this.companyMapper.toEntity(optionalCompany.get());
                 employee.setCompany(company);
             } else {
-                // company does not yet exist, so insert company.
-                // TODO: currently we use address of first employee as company address
+                // company does not yet exist, so insert company with address of first user
                 CompanyDTO companyDTO = new CompanyDTO();
                 companyDTO.setExternalId(externalId);
                 companyDTO.setName(employee.getSurname() + " GmbH");
@@ -132,16 +130,19 @@ public class EmployeesBulkServiceImpl implements EmployeeBulkService {
     public int reIndex(boolean clearFirst) {
         final int pageSize = 1000;
         Pageable pageable = PageRequest.of(0, pageSize);
-        Page<EmployeeDTO> pages;
+        Page<EmployeeDTO> pages = Page.empty();
         int ret = 0;
         do {
             final long start = System.currentTimeMillis();
-            pages = this.employeeService.findAllByFilter(null, null, pageable).get();
+            Optional<Page<EmployeeDTO>> result = this.employeeService.findAllByFilter(null, null, pageable);
+            if (result.isPresent()) {
+                pages = result.get();
+                ret += reIndex(pages.getNumber(), pages.getContent().stream(), clearFirst);
+                pageable = pageable.next();
+                final long end = System.currentTimeMillis();
+                log.info("Page {} of {} in {} msec", pages.getNumber(), pages.getTotalPages(), end - start);
+            }
 
-            ret += reIndex(pages.getNumber(), pages.getContent().stream(), clearFirst);
-            pageable = pageable.next();
-            final long end = System.currentTimeMillis();
-            log.info("Page {} of {} in {} msec", pages.getNumber(), pages.getTotalPages(), end - start);
         } while (pages.hasNext());
         return ret;
     }
@@ -151,8 +152,9 @@ public class EmployeesBulkServiceImpl implements EmployeeBulkService {
     // public because otherwise @Transactional is not working
     public int reIndex(int pageIndex, Stream<EmployeeDTO> employeeStream, boolean clearFirst) {
         log.info("EmployeesBulkServiceImpl.reIndex {}", pageIndex);
-        List<Employee> employeeList = employeeStream.map(
-            employeeDTO -> employeeMapper.toEntity(employeeDTO)).collect(Collectors.toList());
+        List<Employee> employeeList = employeeStream
+            .map(employeeMapper::toEntity)
+            .collect(Collectors.toList());
         int ret = this.employeeRepository.reIndex(employeeList, !clearFirst);
         log.info("EmployeesBulkServiceImpl.reIndex: insert for {} names", ret);
         return ret;
