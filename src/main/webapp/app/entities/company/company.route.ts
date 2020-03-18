@@ -1,25 +1,35 @@
 import { Injectable } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
-import { Resolve, ActivatedRouteSnapshot, Routes } from '@angular/router';
+import { Resolve, ActivatedRouteSnapshot, Routes, Router } from '@angular/router';
 import { JhiResolvePagingParams } from 'ng-jhipster';
+import { Observable, of, EMPTY } from 'rxjs';
+import { flatMap } from 'rxjs/operators';
+
+import { Authority } from 'app/shared/constants/authority.constants';
 import { UserRouteAccessService } from 'app/core/auth/user-route-access-service';
-import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { Company } from 'app/shared/model/company.model';
+import { ICompany, Company } from 'app/shared/model/company.model';
 import { CompanyService } from './company.service';
 import { CompanyComponent } from './company.component';
 import { CompanyDetailComponent } from './company-detail.component';
 import { CompanyUpdateComponent } from './company-update.component';
-import { ICompany } from 'app/shared/model/company.model';
 
 @Injectable({ providedIn: 'root' })
 export class CompanyResolve implements Resolve<ICompany> {
-  constructor(private service: CompanyService) {}
+  constructor(private service: CompanyService, private router: Router) {}
 
-  resolve(route: ActivatedRouteSnapshot): Observable<ICompany> {
+  resolve(route: ActivatedRouteSnapshot): Observable<ICompany> | Observable<never> {
     const id = route.params['id'];
     if (id) {
-      return this.service.find(id).pipe(map((company: HttpResponse<Company>) => company.body));
+      return this.service.find(id).pipe(
+        flatMap((company: HttpResponse<Company>) => {
+          if (company.body) {
+            return of(company.body);
+          } else {
+            this.router.navigate(['404']);
+            return EMPTY;
+          }
+        })
+      );
     }
     return of(new Company());
   }
@@ -33,7 +43,7 @@ export const companyRoute: Routes = [
       pagingParams: JhiResolvePagingParams
     },
     data: {
-      authorities: ['ROLE_USER'],
+      authorities: [Authority.USER],
       defaultSort: 'id,asc',
       pageTitle: 'pmssqlApp.company.home.title'
     },
@@ -46,7 +56,7 @@ export const companyRoute: Routes = [
       company: CompanyResolve
     },
     data: {
-      authorities: ['ROLE_USER'],
+      authorities: [Authority.USER],
       pageTitle: 'pmssqlApp.company.home.title'
     },
     canActivate: [UserRouteAccessService]
@@ -58,7 +68,7 @@ export const companyRoute: Routes = [
       company: CompanyResolve
     },
     data: {
-      authorities: ['ROLE_USER'],
+      authorities: [Authority.USER],
       pageTitle: 'pmssqlApp.company.home.title'
     },
     canActivate: [UserRouteAccessService]
@@ -70,7 +80,7 @@ export const companyRoute: Routes = [
       company: CompanyResolve
     },
     data: {
-      authorities: ['ROLE_USER'],
+      authorities: [Authority.USER],
       pageTitle: 'pmssqlApp.company.home.title'
     },
     canActivate: [UserRouteAccessService]

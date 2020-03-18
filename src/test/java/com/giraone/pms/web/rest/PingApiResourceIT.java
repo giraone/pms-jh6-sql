@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.test.web.servlet.MockMvc;
@@ -53,7 +54,7 @@ public class PingApiResourceIT {
         // act/assert
         pingApiMockMvc.perform(get("/trusted-api/ping")
             .with(user(DEFAULT_TRUSTED_SYSTEM_LOGIN))
-            .contentType(TestUtil.APPLICATION_JSON_UTF8))
+            .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.status").value("OK"));
     }
@@ -64,7 +65,7 @@ public class PingApiResourceIT {
         // act/assert
         pingApiMockMvc.perform(get("/trusted-api/ping")
             .with(user(DEFAULT_USER_LOGIN))
-            .contentType(TestUtil.APPLICATION_JSON_UTF8))
+            .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isForbidden());
     }
 
@@ -73,7 +74,7 @@ public class PingApiResourceIT {
 
         // act/assert
         pingApiMockMvc.perform(get("/trusted-api/ping")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8))
+            .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isUnauthorized());
     }
 }

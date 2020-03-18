@@ -5,9 +5,6 @@ import com.giraone.pms.config.Constants;
 import com.giraone.pms.domain.Authority;
 import com.giraone.pms.domain.User;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-
 import javax.validation.constraints.*;
 import java.time.Instant;
 import java.util.Set;

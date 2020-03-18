@@ -7,30 +7,25 @@ import com.giraone.pms.security.AuthoritiesConstants;
 import com.giraone.pms.service.CompanyService;
 import com.giraone.pms.service.dto.CompanyDTO;
 import com.giraone.pms.service.mapper.CompanyMapper;
-import com.giraone.pms.web.rest.errors.ExceptionTranslator;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.Validator;
-
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.giraone.pms.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.mockito.Mockito.*;
@@ -38,9 +33,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
- * Integration tests for the {@Link CompanyResource} REST controller.
+ * Integration tests for the {@link CompanyResource} REST controller.
  */
 @SpringBootTest(classes = PmssqlApp.class)
+@ExtendWith(MockitoExtension.class)
+@AutoConfigureMockMvc
 @WithMockUser(username = "admin", authorities={AuthoritiesConstants.ADMIN})
 public class CompanyResourceIT {
 
@@ -75,35 +72,12 @@ public class CompanyResourceIT {
     private CompanyService companyService;
 
     @Autowired
-    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
-
-    @Autowired
-    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
-
-    @Autowired
-    private ExceptionTranslator exceptionTranslator;
-
-    @Autowired
     private EntityManager em;
 
     @Autowired
-    private Validator validator;
-
     private MockMvc restCompanyMockMvc;
 
     private Company company;
-
-    @BeforeEach
-    void setup() {
-        MockitoAnnotations.initMocks(this);
-        final CompanyResource companyResource = new CompanyResource(companyService);
-        this.restCompanyMockMvc = MockMvcBuilders.standaloneSetup(companyResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter)
-            .setValidator(validator).build();
-    }
 
     /**
      * Create an entity for this test.
@@ -111,7 +85,7 @@ public class CompanyResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    static Company createEntity(EntityManager em) {
+    public static Company createEntity(EntityManager em) {
         Company company = new Company()
             .externalId(DEFAULT_EXTERNAL_ID)
             .name(DEFAULT_NAME)
@@ -126,7 +100,7 @@ public class CompanyResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    static Company createUpdatedEntity(EntityManager em) {
+    public static Company createUpdatedEntity(EntityManager em) {
         Company company = new Company()
             .externalId(UPDATED_EXTERNAL_ID)
             .name(UPDATED_NAME)
@@ -137,19 +111,19 @@ public class CompanyResourceIT {
     }
 
     @BeforeEach
-    void initTest() {
+    public void initTest() {
         company = createEntity(em);
     }
 
     @Test
     @Transactional
-    void createCompany() throws Exception {
+    public void createCompany() throws Exception {
         int databaseSizeBeforeCreate = companyRepository.findAll().size();
 
         // Create the Company
         CompanyDTO companyDTO = companyMapper.toDto(company);
         restCompanyMockMvc.perform(post("/api/companies")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(companyDTO)))
             .andExpect(status().isCreated());
 
@@ -166,7 +140,7 @@ public class CompanyResourceIT {
 
     @Test
     @Transactional
-    void createCompanyWithExistingId() throws Exception {
+    public void createCompanyWithExistingId() throws Exception {
         int databaseSizeBeforeCreate = companyRepository.findAll().size();
 
         // Create the Company with an existing ID
@@ -175,7 +149,7 @@ public class CompanyResourceIT {
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restCompanyMockMvc.perform(post("/api/companies")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(companyDTO)))
             .andExpect(status().isBadRequest());
 
@@ -187,7 +161,7 @@ public class CompanyResourceIT {
 
     @Test
     @Transactional
-    void checkExternalIdIsRequired() throws Exception {
+    public void checkExternalIdIsRequired() throws Exception {
         int databaseSizeBeforeTest = companyRepository.findAll().size();
         // set the field null
         company.setExternalId(null);
@@ -196,7 +170,7 @@ public class CompanyResourceIT {
         CompanyDTO companyDTO = companyMapper.toDto(company);
 
         restCompanyMockMvc.perform(post("/api/companies")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(companyDTO)))
             .andExpect(status().isBadRequest());
 
@@ -206,76 +180,63 @@ public class CompanyResourceIT {
 
     @Test
     @Transactional
-    void getAllCompanies() throws Exception {
+    public void getAllCompanies() throws Exception {
         // Initialize the database
         companyRepository.saveAndFlush(company);
 
         // Get all the companyList
         restCompanyMockMvc.perform(get("/api/companies?sort=id,desc"))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(company.getId().intValue())))
-            .andExpect(jsonPath("$.[*].externalId").value(hasItem(DEFAULT_EXTERNAL_ID.toString())))
-            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
-            .andExpect(jsonPath("$.[*].postalCode").value(hasItem(DEFAULT_POSTAL_CODE.toString())))
-            .andExpect(jsonPath("$.[*].city").value(hasItem(DEFAULT_CITY.toString())))
-            .andExpect(jsonPath("$.[*].streetAddress").value(hasItem(DEFAULT_STREET_ADDRESS.toString())));
+            .andExpect(jsonPath("$.[*].externalId").value(hasItem(DEFAULT_EXTERNAL_ID)))
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
+            .andExpect(jsonPath("$.[*].postalCode").value(hasItem(DEFAULT_POSTAL_CODE)))
+            .andExpect(jsonPath("$.[*].city").value(hasItem(DEFAULT_CITY)))
+            .andExpect(jsonPath("$.[*].streetAddress").value(hasItem(DEFAULT_STREET_ADDRESS)));
     }
 
     @SuppressWarnings({"unchecked"})
     public void getAllCompaniesWithEagerRelationshipsIsEnabled() throws Exception {
-        CompanyResource companyResource = new CompanyResource(companyServiceMock);
         when(companyServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
 
-        MockMvc restCompanyMockMvc = MockMvcBuilders.standaloneSetup(companyResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter).build();
-
         restCompanyMockMvc.perform(get("/api/companies?eagerload=true"))
-        .andExpect(status().isOk());
+            .andExpect(status().isOk());
 
         verify(companyServiceMock, times(1)).findAllWithEagerRelationships(any());
     }
 
     @SuppressWarnings({"unchecked"})
     public void getAllCompaniesWithEagerRelationshipsIsNotEnabled() throws Exception {
-        CompanyResource companyResource = new CompanyResource(companyServiceMock);
-            when(companyServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-            MockMvc restCompanyMockMvc = MockMvcBuilders.standaloneSetup(companyResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter).build();
+        when(companyServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
 
         restCompanyMockMvc.perform(get("/api/companies?eagerload=true"))
-        .andExpect(status().isOk());
+            .andExpect(status().isOk());
 
-            verify(companyServiceMock, times(1)).findAllWithEagerRelationships(any());
+        verify(companyServiceMock, times(1)).findAllWithEagerRelationships(any());
     }
 
     @Test
     @Transactional
-    void getCompany() throws Exception {
+    public void getCompany() throws Exception {
         // Initialize the database
         companyRepository.saveAndFlush(company);
 
         // Get the company
         restCompanyMockMvc.perform(get("/api/companies/{id}", company.getId()))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(company.getId().intValue()))
-            .andExpect(jsonPath("$.externalId").value(DEFAULT_EXTERNAL_ID.toString()))
-            .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
-            .andExpect(jsonPath("$.postalCode").value(DEFAULT_POSTAL_CODE.toString()))
-            .andExpect(jsonPath("$.city").value(DEFAULT_CITY.toString()))
-            .andExpect(jsonPath("$.streetAddress").value(DEFAULT_STREET_ADDRESS.toString()));
+            .andExpect(jsonPath("$.externalId").value(DEFAULT_EXTERNAL_ID))
+            .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
+            .andExpect(jsonPath("$.postalCode").value(DEFAULT_POSTAL_CODE))
+            .andExpect(jsonPath("$.city").value(DEFAULT_CITY))
+            .andExpect(jsonPath("$.streetAddress").value(DEFAULT_STREET_ADDRESS));
     }
 
     @Test
     @Transactional
-    void getNonExistingCompany() throws Exception {
+    public void getNonExistingCompany() throws Exception {
         // Get the company
         restCompanyMockMvc.perform(get("/api/companies/{id}", Long.MAX_VALUE))
             .andExpect(status().isNotFound());
@@ -283,7 +244,7 @@ public class CompanyResourceIT {
 
     @Test
     @Transactional
-    void updateCompany() throws Exception {
+    public void updateCompany() throws Exception {
         // Initialize the database
         companyRepository.saveAndFlush(company);
 
@@ -302,7 +263,7 @@ public class CompanyResourceIT {
         CompanyDTO companyDTO = companyMapper.toDto(updatedCompany);
 
         restCompanyMockMvc.perform(put("/api/companies")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(companyDTO)))
             .andExpect(status().isOk());
 
@@ -319,7 +280,7 @@ public class CompanyResourceIT {
 
     @Test
     @Transactional
-    void updateNonExistingCompany() throws Exception {
+    public void updateNonExistingCompany() throws Exception {
         int databaseSizeBeforeUpdate = companyRepository.findAll().size();
 
         // Create the Company
@@ -327,7 +288,7 @@ public class CompanyResourceIT {
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restCompanyMockMvc.perform(put("/api/companies")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(companyDTO)))
             .andExpect(status().isBadRequest());
 
@@ -338,7 +299,7 @@ public class CompanyResourceIT {
 
     @Test
     @Transactional
-    void deleteCompany() throws Exception {
+    public void deleteCompany() throws Exception {
         // Initialize the database
         companyRepository.saveAndFlush(company);
 
@@ -346,7 +307,7 @@ public class CompanyResourceIT {
 
         // Delete the company
         restCompanyMockMvc.perform(delete("/api/companies/{id}", company.getId())
-            .accept(TestUtil.APPLICATION_JSON_UTF8))
+            .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
