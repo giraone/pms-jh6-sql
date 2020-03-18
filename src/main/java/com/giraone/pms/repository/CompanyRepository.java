@@ -1,5 +1,7 @@
 package com.giraone.pms.repository;
+
 import com.giraone.pms.domain.Company;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
@@ -24,5 +26,4 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
 
     @Query("select company from Company company left join fetch company.users where company.id =:id")
     Optional<Company> findOneWithEagerRelationships(@Param("id") Long id);
-
 }

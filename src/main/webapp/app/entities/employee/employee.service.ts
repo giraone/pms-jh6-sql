@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import * as moment from 'moment';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { DATE_FORMAT } from 'app/shared/constants/input.constants';
 import { map } from 'rxjs/operators';
+import * as moment from 'moment';
 
+import { DATE_FORMAT } from 'app/shared/constants/input.constants';
 import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared/util/request-util';
 import { IEmployee } from 'app/shared/model/employee.model';
@@ -46,20 +45,20 @@ export class EmployeeService {
       .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
   }
 
-  delete(id: number): Observable<HttpResponse<any>> {
-    return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
+  delete(id: number): Observable<HttpResponse<{}>> {
+    return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }
 
   protected convertDateFromClient(employee: IEmployee): IEmployee {
     const copy: IEmployee = Object.assign({}, employee, {
-      dateOfBirth: employee.dateOfBirth != null && employee.dateOfBirth.isValid() ? employee.dateOfBirth.format(DATE_FORMAT) : null
+      dateOfBirth: employee.dateOfBirth && employee.dateOfBirth.isValid() ? employee.dateOfBirth.format(DATE_FORMAT) : undefined
     });
     return copy;
   }
 
   protected convertDateFromServer(res: EntityResponseType): EntityResponseType {
     if (res.body) {
-      res.body.dateOfBirth = res.body.dateOfBirth != null ? moment(res.body.dateOfBirth) : null;
+      res.body.dateOfBirth = res.body.dateOfBirth ? moment(res.body.dateOfBirth) : undefined;
     }
     return res;
   }
@@ -67,7 +66,7 @@ export class EmployeeService {
   protected convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
     if (res.body) {
       res.body.forEach((employee: IEmployee) => {
-        employee.dateOfBirth = employee.dateOfBirth != null ? moment(employee.dateOfBirth) : null;
+        employee.dateOfBirth = employee.dateOfBirth ? moment(employee.dateOfBirth) : undefined;
       });
     }
     return res;

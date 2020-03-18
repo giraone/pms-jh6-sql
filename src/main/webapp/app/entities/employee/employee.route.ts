@@ -1,25 +1,35 @@
 import { Injectable } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
-import { Resolve, ActivatedRouteSnapshot, Routes } from '@angular/router';
+import { Resolve, ActivatedRouteSnapshot, Routes, Router } from '@angular/router';
 import { JhiResolvePagingParams } from 'ng-jhipster';
+import { Observable, of, EMPTY } from 'rxjs';
+import { flatMap } from 'rxjs/operators';
+
+import { Authority } from 'app/shared/constants/authority.constants';
 import { UserRouteAccessService } from 'app/core/auth/user-route-access-service';
-import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { Employee } from 'app/shared/model/employee.model';
+import { IEmployee, Employee } from 'app/shared/model/employee.model';
 import { EmployeeService } from './employee.service';
 import { EmployeeComponent } from './employee.component';
 import { EmployeeDetailComponent } from './employee-detail.component';
 import { EmployeeUpdateComponent } from './employee-update.component';
-import { IEmployee } from 'app/shared/model/employee.model';
 
 @Injectable({ providedIn: 'root' })
 export class EmployeeResolve implements Resolve<IEmployee> {
-  constructor(private service: EmployeeService) {}
+  constructor(private service: EmployeeService, private router: Router) {}
 
-  resolve(route: ActivatedRouteSnapshot): Observable<IEmployee> {
+  resolve(route: ActivatedRouteSnapshot): Observable<IEmployee> | Observable<never> {
     const id = route.params['id'];
     if (id) {
-      return this.service.find(id).pipe(map((employee: HttpResponse<Employee>) => employee.body));
+      return this.service.find(id).pipe(
+        flatMap((employee: HttpResponse<Employee>) => {
+          if (employee.body) {
+            return of(employee.body);
+          } else {
+            this.router.navigate(['404']);
+            return EMPTY;
+          }
+        })
+      );
     }
     return of(new Employee());
   }
@@ -33,7 +43,7 @@ export const employeeRoute: Routes = [
       pagingParams: JhiResolvePagingParams
     },
     data: {
-      authorities: ['ROLE_USER'],
+      authorities: [Authority.USER],
       defaultSort: 'id,asc',
       pageTitle: 'pmssqlApp.employee.home.title'
     },
@@ -46,7 +56,7 @@ export const employeeRoute: Routes = [
       employee: EmployeeResolve
     },
     data: {
-      authorities: ['ROLE_USER'],
+      authorities: [Authority.USER],
       pageTitle: 'pmssqlApp.employee.home.title'
     },
     canActivate: [UserRouteAccessService]
@@ -58,7 +68,7 @@ export const employeeRoute: Routes = [
       employee: EmployeeResolve
     },
     data: {
-      authorities: ['ROLE_USER'],
+      authorities: [Authority.USER],
       pageTitle: 'pmssqlApp.employee.home.title'
     },
     canActivate: [UserRouteAccessService]
@@ -70,7 +80,7 @@ export const employeeRoute: Routes = [
       employee: EmployeeResolve
     },
     data: {
-      authorities: ['ROLE_USER'],
+      authorities: [Authority.USER],
       pageTitle: 'pmssqlApp.employee.home.title'
     },
     canActivate: [UserRouteAccessService]

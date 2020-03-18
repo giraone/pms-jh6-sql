@@ -69,7 +69,6 @@ public class CompanyServiceImpl implements CompanyService {
     public Page<CompanyDTO> findAllWithEagerRelationships(Pageable pageable) {
         return companyRepository.findAllWithEagerRelationships(pageable).map(companyMapper::toDto);
     }
-    
 
     /**
      * Get one company by id.

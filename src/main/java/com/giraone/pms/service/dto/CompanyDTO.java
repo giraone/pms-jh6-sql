@@ -1,4 +1,5 @@
 package com.giraone.pms.service.dto;
+
 import io.swagger.annotations.ApiModel;
 import javax.validation.constraints.*;
 import java.io.Serializable;
@@ -11,7 +12,7 @@ import java.util.Objects;
  */
 @ApiModel(description = "The Company entity.")
 public class CompanyDTO implements Serializable {
-
+    
     private Long id;
 
     @NotNull
@@ -25,9 +26,8 @@ public class CompanyDTO implements Serializable {
 
     private String streetAddress;
 
-
     private Set<UserDTO> users = new HashSet<>();
-
+    
     public Long getId() {
         return id;
     }
@@ -114,6 +114,7 @@ public class CompanyDTO implements Serializable {
             ", postalCode='" + getPostalCode() + "'" +
             ", city='" + getCity() + "'" +
             ", streetAddress='" + getStreetAddress() + "'" +
+            ", users='" + getUsers() + "'" +
             "}";
     }
 }

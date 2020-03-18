@@ -1,7 +1,7 @@
 version: '2'
 services:
   pmssql-postgresql:
-    image: postgres:11.5
+    image: postgres:12.1
     # volumes:
     #     - ~/volumes/jhipster/pmssql/postgresql/:/var/lib/postgresql/data/
     environment:

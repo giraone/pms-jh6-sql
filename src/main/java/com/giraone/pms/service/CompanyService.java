@@ -34,7 +34,7 @@ public interface CompanyService {
      * @return the list of entities.
      */
     Page<CompanyDTO> findAllWithEagerRelationships(Pageable pageable);
-    
+
     /**
      * Get the "id" company.
      *

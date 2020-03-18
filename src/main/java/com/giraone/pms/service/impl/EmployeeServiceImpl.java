@@ -61,7 +61,6 @@ public class EmployeeServiceImpl implements EmployeeService {
             .map(employeeMapper::toDto);
     }
 
-
     /**
      * Get one employee by id.
      *

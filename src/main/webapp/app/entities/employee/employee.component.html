@@ -1,81 +1,89 @@
 <div>
     <h2 id="page-heading">
         <span jhiTranslate="pmssqlApp.employee.home.title">Employees</span>
+
         <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-employee" [routerLink]="['/employee/new']">
-            <fa-icon [icon]="'plus'"></fa-icon>
+            <fa-icon icon="plus"></fa-icon>
             <span  jhiTranslate="pmssqlApp.employee.home.createLabel">
             Create a new Employee
             </span>
         </button>
     </h2>
+
     <jhi-alert-error></jhi-alert-error>
+
     <jhi-alert></jhi-alert>
-    <br/>
-    <div class="alert alert-warning" *ngIf="employees?.length === 0">
+
+    <div class="alert alert-warning" id="no-result" *ngIf="employees?.length === 0">
         <span jhiTranslate="pmssqlApp.employee.home.notFound">No employees found</span>
     </div>
-    <div class="table-responsive" *ngIf="employees?.length > 0">
+
+    <div class="table-responsive" id="entities" *ngIf="employees?.length > 0">
         <table class="table table-striped" aria-describedby="page-heading">
             <thead>
-            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
-            <th scope="col"  jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th scope="col"  jhiSortBy="surname"><span jhiTranslate="pmssqlApp.employee.surname">Surname</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th scope="col"  jhiSortBy="givenName"><span jhiTranslate="pmssqlApp.employee.givenName">Given Name</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th scope="col"  jhiSortBy="dateOfBirth"><span jhiTranslate="pmssqlApp.employee.dateOfBirth">Date Of Birth</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th scope="col"  jhiSortBy="gender"><span jhiTranslate="pmssqlApp.employee.gender">Gender</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th scope="col"  jhiSortBy="postalCode"><span jhiTranslate="pmssqlApp.employee.postalCode">Postal Code</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th scope="col"  jhiSortBy="city"><span jhiTranslate="pmssqlApp.employee.city">City</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th scope="col"  jhiSortBy="streetAddress"><span jhiTranslate="pmssqlApp.employee.streetAddress">Street Address</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th scope="col"  jhiSortBy="companyId"><span jhiTranslate="pmssqlApp.employee.company">Company</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th scope="col"></th>
-            </tr>
+                <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" [callback]="loadPage.bind(this)">
+                    <th scope="col"  jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="surname"><span jhiTranslate="pmssqlApp.employee.surname">Surname</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="givenName"><span jhiTranslate="pmssqlApp.employee.givenName">Given Name</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="dateOfBirth"><span jhiTranslate="pmssqlApp.employee.dateOfBirth">Date Of Birth</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="gender"><span jhiTranslate="pmssqlApp.employee.gender">Gender</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="postalCode"><span jhiTranslate="pmssqlApp.employee.postalCode">Postal Code</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="city"><span jhiTranslate="pmssqlApp.employee.city">City</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="streetAddress"><span jhiTranslate="pmssqlApp.employee.streetAddress">Street Address</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="companyId"><span jhiTranslate="pmssqlApp.employee.company">Company</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"></th>
+                </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let employee of employees ;trackBy: trackId">
-                <td><a [routerLink]="['/employee', employee.id, 'view' ]">{{employee.id}}</a></td>
-                <td>{{employee.surname}}</td>
-                <td>{{employee.givenName}}</td>
-                <td>{{employee.dateOfBirth | date:'mediumDate'}}</td>
-                <td jhiTranslate="{{'pmssqlApp.GenderType.' + employee.gender}}">{{employee.gender}}</td>
-                <td>{{employee.postalCode}}</td>
-                <td>{{employee.city}}</td>
-                <td>{{employee.streetAddress}}</td>
-                <td>
-                    <div *ngIf="employee.companyId">
-                        <a [routerLink]="['/company', employee.companyId , 'view' ]" >{{employee.companyId}}</a>
-                    </div>
-                </td>
-                <td class="text-right">
-                    <div class="btn-group">
-                        <button type="submit"
-                                [routerLink]="['/employee', employee.id, 'view' ]"
-                                class="btn btn-info btn-sm">
-                            <fa-icon [icon]="'eye'"></fa-icon>
-                            <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
-                        </button>
-                        <button type="submit"
-                                [routerLink]="['/employee', employee.id, 'edit']"
-                                class="btn btn-primary btn-sm">
-                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
-                            <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
-                        </button>
-                        <button type="submit" (click)="delete(employee)"
-                                class="btn btn-danger btn-sm">
-                            <fa-icon [icon]="'times'"></fa-icon>
-                            <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
-                        </button>
-                    </div>
-                </td>
-            </tr>
+                <tr *ngFor="let employee of employees ;trackBy: trackId">
+                    <td><a [routerLink]="['/employee', employee.id, 'view']">{{ employee.id }}</a></td>
+                    <td>{{ employee.surname }}</td>
+                    <td>{{ employee.givenName }}</td>
+                    <td>{{ employee.dateOfBirth | date:'mediumDate' }}</td>
+                    <td jhiTranslate="{{ 'pmssqlApp.GenderType.' + employee.gender }}">{{ employee.gender }}</td>
+                    <td>{{ employee.postalCode }}</td>
+                    <td>{{ employee.city }}</td>
+                    <td>{{ employee.streetAddress }}</td>
+                    <td>
+                        <div *ngIf="employee.companyId">
+                            <a [routerLink]="['/company', employee.companyId , 'view']" >{{ employee.companyId }}</a>
+                        </div>
+                    </td>
+                    <td class="text-right">
+                        <div class="btn-group">
+                            <button type="submit"
+                                    [routerLink]="['/employee', employee.id, 'view']"
+                                    class="btn btn-info btn-sm">
+                                <fa-icon icon="eye"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                            </button>
+
+                            <button type="submit"
+                                    [routerLink]="['/employee', employee.id, 'edit']"
+                                    class="btn btn-primary btn-sm">
+                                <fa-icon icon="pencil-alt"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                            </button>
+
+                            <button type="submit" (click)="delete(employee)"
+                                    class="btn btn-danger btn-sm">
+                                <fa-icon icon="times"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>
-    <div [hidden]="employees?.length === 0">
+
+    <div *ngIf="employees?.length > 0">
         <div class="row justify-content-center">
             <jhi-item-count [page]="page" [total]="totalItems" [itemsPerPage]="itemsPerPage"></jhi-item-count>
         </div>
+
         <div class="row justify-content-center">
-            <ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage(page)"></ngb-pagination>
+            <ngb-pagination [collectionSize]="totalItems" [(page)]="ngbPaginationPage" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage($event)"></ngb-pagination>
         </div>
     </div>
 </div>

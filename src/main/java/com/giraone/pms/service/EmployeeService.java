@@ -28,7 +28,6 @@ public interface EmployeeService {
      */
     Page<EmployeeDTO> findAll(Pageable pageable);
 
-
     /**
      * Get the "id" employee.
      *
