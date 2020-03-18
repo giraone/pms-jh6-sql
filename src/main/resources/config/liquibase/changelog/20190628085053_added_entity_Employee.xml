@@ -58,7 +58,7 @@
     -->
     <changeSet id="20190628085053-1-data" author="jhipster" context="faker">
         <loadData
-                  file="config/liquibase/data/employee.csv"
+                  file="config/liquibase/fake-data/employee.csv"
                   separator=";"
                   tableName="employee">
             <column name="id" type="numeric"/>

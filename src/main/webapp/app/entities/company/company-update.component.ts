@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+import { HttpResponse } from '@angular/common/http';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { JhiAlertService } from 'ng-jhipster';
-import { CompanyService } from './company.service';
+
 import { ICompany, Company } from 'app/shared/model/company.model';
+import { CompanyService } from './company.service';
 import { IUser } from 'app/core/user/user.model';
 import { UserService } from 'app/core/user/user.service';
 
@@ -30,7 +29,6 @@ export class CompanyUpdateComponent implements OnInit {
   });
 
   constructor(
-    protected jhiAlertService: JhiAlertService,
     protected companyService: CompanyService,
     protected userService: UserService,
     protected activatedRoute: ActivatedRoute,
@@ -38,7 +36,6 @@ export class CompanyUpdateComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.isSaving = false;
     this.activatedRoute.data.subscribe(({ company }) => {
       this.updateForm(company);
 
