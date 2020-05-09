@@ -3,8 +3,8 @@ package com.giraone.pms.repository;
 import com.giraone.pms.PmssqlApp;
 import com.giraone.pms.domain.Company;
 import com.giraone.pms.domain.User;
-import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
@@ -58,7 +58,7 @@ class CompanyRepositoryIT {
         assertThat(companyRepository.count()).isEqualTo(1);
     }
 
-    @Ignore // TODO
+    @Disabled // TODO
     @Test
     void save_existingCompany_throwsException() {
 
